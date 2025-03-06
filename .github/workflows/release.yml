@@ -11,7 +11,7 @@ jobs:
       contents: write
     strategy:
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -26,16 +26,7 @@ jobs:
           cache: "npm"
 
       - name: Install dependencies
-        if: matrix.os != 'windows-latest'
         run: npm ci
-
-      - name: Install dependencies (Windows)
-        if: matrix.os == 'windows-latest'
-        run: |
-          npm cache clean --force
-          rm -rf node_modules
-          rm -f package-lock.json
-          npm install
 
       - name: Build Electron app
         run: npm run electron:build

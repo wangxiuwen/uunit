@@ -77,16 +77,6 @@
             "hardenedRuntime": false,
             "gatekeeperAssess": false
         },
-        "win": {
-            "target": [
-                "nsis"
-            ]
-        },
-        "linux": {
-            "target": [
-                "AppImage"
-            ]
-        },
         "electronVersion": "34.3.0"
     },
     "version-file": {
