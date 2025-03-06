@@ -1,0 +1,92 @@
+{
+    "name": "uunit",
+    "private": true,
+    "version": "0.0.0",
+    "description": "A cross-platform desktop application built with Electron and React",
+    "author": {
+        "name": "William Wong"
+    },
+    "type": "module",
+    "scripts": {
+        "dev": "concurrently \"vite\" \"cross-env NODE_ENV=development electron electron/main.cjs\"",
+        "build": "tsc -b && vite build",
+        "lint": "eslint .",
+        "preview": "vite preview",
+        "electron:dev": "cross-env NODE_ENV=development electron electron/main.cjs",
+        "electron:build": "npm run build && electron-builder",
+        "electron:start": "electron .",
+        "postinstall": "electron-builder install-app-deps"
+    },
+    "main": "electron/main.cjs",
+    "dependencies": {
+        "@electron/remote": "^2.1.2",
+        "@emotion/react": "^11.14.0",
+        "@emotion/styled": "^11.14.0",
+        "@mui/icons-material": "^6.4.6",
+        "@mui/material": "^6.4.6",
+        "app-root-path": "^3.1.0",
+        "axios": "^1.8.1",
+        "better-sqlite3": "^11.8.1",
+        "https-proxy-agent": "^7.0.6",
+        "pg": "^8.13.3",
+        "pg-hstore": "^2.3.4",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+        "react-router-dom": "^7.2.0",
+        "sequelize": "^6.37.5",
+        "socks-proxy-agent": "^8.0.5"
+    },
+    "devDependencies": {
+        "@eslint/js": "^9.21.0",
+        "@types/react": "^19.0.10",
+        "@types/react-dom": "^19.0.4",
+        "@vitejs/plugin-react": "^4.3.4",
+        "concurrently": "^8.2.2",
+        "cross-env": "^7.0.3",
+        "electron": "^34.3.0",
+        "electron-builder": "^24.13.3",
+        "eslint": "^9.21.0",
+        "eslint-plugin-react-hooks": "^5.1.0",
+        "eslint-plugin-react-refresh": "^0.4.19",
+        "globals": "^15.15.0",
+        "typescript": "~5.7.2",
+        "typescript-eslint": "^8.24.1",
+        "vite": "^6.2.0"
+    },
+    "build": {
+        "directories": {
+            "output": "release",
+            "buildResources": "build"
+        },
+        "appId": "com.wangxiuwen.app",
+        "productName": "uunit",
+        "files": [
+            {
+                "filter": [
+                    "dist/**/*",
+                    "electron/**/*"
+                ]
+            }
+        ],
+        "mac": {
+            "category": "public.app-category.utilities",
+            "target": [
+                "dmg"
+            ],
+            "identity": null,
+            "hardenedRuntime": false,
+            "gatekeeperAssess": false
+        },
+        "win": {
+            "target": [
+                "nsis"
+            ]
+        },
+        "linux": {
+            "target": [
+                "AppImage"
+            ]
+        },
+        "electronVersion": "34.3.0"
+    }
+}

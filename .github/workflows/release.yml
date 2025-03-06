@@ -1,0 +1,51 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build Electron app
+        run: npm run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create source code archives
+        run: |
+          zip -r source-code.zip . -x "node_modules/*" "dist/*" "release/*"
+          tar --exclude="./node_modules" --exclude="./dist" --exclude="./release" -czf source-code.tar.gz .
+        if: matrix.os == 'macos-latest'
+
+      - name: Upload artifacts
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release/*.dmg
+            release/*.exe
+            source-code.zip
+            source-code.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
