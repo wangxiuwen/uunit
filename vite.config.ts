@@ -16,6 +16,7 @@ export default defineConfig({
     assetsDir: 'assets',
     emptyOutDir: true,
     rollupOptions: {
+      external: ['better-sqlite3'],
       output: {
         manualChunks: undefined
       }
