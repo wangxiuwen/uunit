@@ -62,7 +62,8 @@ class ResourceFixerWorker extends WorkerFramework {
                     规则：
                     1. 识别并保留真实电影名称，去除所有额外信息
                     2. 如果有多语言标题，优先保留原始语言标题
-                    3. 去除以下内容：
+                    3. 如果解析之后的名称有冒号，则保留冒号后面的内容，冒号和冒号前面的内容不要
+                    4. 去除以下内容：
                         - 发布组信息（如[阳光电影www.ygdy8.com]、迅雷下载、第一电影天堂等）
                         - 分辨率信息（如1080P、4K、HD）
                         - 字幕信息（如国语中字、双语）
@@ -73,7 +74,7 @@ class ResourceFixerWorker extends WorkerFramework {
                         - 网站和下载信息（如迅雷下载、阳光电影）
                         - 剧集信息 (如 第一季 第二季)
                         - 标点符号
-                    4. 仅输出可能的电影名称 JSON 数组，不要输出任何其它信息
+                    5. 仅输出可能的电影名称 JSON 数组，不要输出任何其它信息,不要输出  \`
                     示例：
                     输入："[电影天堂www.dytt89.com].泰坦尼克号.1997.国英双语.中英字幕.BluRay.1080P.x264.mp4"
                     输出：["泰坦尼克号"]
@@ -87,12 +88,21 @@ class ResourceFixerWorker extends WorkerFramework {
                     输入："《枯草/春风劲草》"
                     输出: ["枯草","春风劲草"]
 
+                    输入："火线警探：原始城市"
+                    输出: ["原始城市"]
+                    
                     请处理以下电影标题：
                     ${resource.title}`
                 );
             
-                cleanedTitles = JSON.parse(cleanedTitles);
-                logger.info(`标题清理完成: ${cleanedTitles}(${resource.title})`);
+                try {
+                    cleanedTitles = JSON.parse(cleanedTitles);
+                    logger.info(`标题清理完成: ${cleanedTitles}(${resource.title})`);
+                } catch (e) {
+                    logger.error(`解析清理后的标题时出错: ${e.message}`);
+                    await this.updateFailedCount(resource, new Error('AI 标题清理失败'));
+                    continue;
+                }
 
                 // 使用清理后的标题搜索TMDB电影信息
                 let searchResults;
@@ -143,21 +153,34 @@ class ResourceFixerWorker extends WorkerFramework {
                 // 任务处理完成后休眠1秒
                 await new Promise(resolve => setTimeout(resolve, 10));
             } catch (error) {
-                await this.updateFailedCount(resource, error, '数据库更新失败');
+
+                if (resource) {
+                    await this.updateFailedCount(resource, error, '数据库更新失败');
+                    this.sendMessage('error', { success: false, error: error.message, resourceId: resource.id });
+                }
                 this.sendMessage('error', { success: false, error: error.message, resourceId: resource.id });
-                await new Promise(resolve => setTimeout(resolve, 1000));
             }
         }
     }
 
     async updateFailedCount(resource, error, context = '') {
-        const errorMessage = context ? `${context}: ${error.message}` : error.message;
-        logger.error(`处理失败: ${errorMessage}`);
-        await Resource.update({
-            failed_count: (resource.failed_count || 0) + 1,
-        }, {
-            where: { id: resource.id }
-        });
+        try {
+            const errorMessage = context ? `${context}: ${error.message}` : error.message;
+            logger.error(`处理失败: ${errorMessage}`);
+    
+            if (resource && resource.id) {  // 确保 resource 存在
+                await Resource.update({
+                    failed_count: (resource.failed_count || 0) + 1,
+                }, {
+                    where: { id: resource.id }
+                });
+            } else {
+                logger.warn('无法更新失败计数: resource 为空');
+            }
+    
+        } catch (updateError) {
+            logger.error(`update 失败: ${updateError}`);
+        }
         await new Promise(resolve => setTimeout(resolve, 1000));
     }
 }
