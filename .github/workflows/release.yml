@@ -1,0 +1,65 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        os: [macos-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Python 3.11 (Fix missing distutils)
+        run: brew install python@3.11
+
+      - name: Set Python 3.11 as default
+        run: echo "PYTHON=$(brew --prefix python@3.11)/bin/python3.11" >> $GITHUB_ENV
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "v20.18.1"
+          cache: "npm"
+
+      - name: Install node-gyp globally
+        run: npm install -g node-gyp
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: version
+        run: npm run prebuild
+
+      - name: Rebuild SQLite3 for Electron
+        run: npm rebuild sqlite3 --runtime=electron --target=20.18.1 --dist-url=https://electronjs.org/headers
+
+      - name: Build Electron app
+        run: npm run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create source code archives
+        run: |
+          zip -r source-code.zip . -x "node_modules/*" "dist/*" "release/*"
+          tar --exclude="./node_modules" --exclude="./dist" --exclude="./release" -czf source-code.tar.gz .
+        if: matrix.os == 'macos-latest'
+
+      - name: Upload artifacts
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            release/*.dmg
+            source-code.zip
+            source-code.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
