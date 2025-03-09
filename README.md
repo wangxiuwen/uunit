@@ -6,7 +6,7 @@
 
 uunit is a cross-platform desktop application developed with Electron and React for managing and organizing magnet resources. It integrates an intelligent crawler system and automatic movie information matching functionality, providing users with a powerful resource management solution.
 
-## screenshot
+## Screenshot
 
 ![screenshot](docs/screenshots/screenshot-search.png)
 
@@ -31,7 +31,17 @@ uunit is a cross-platform desktop application developed with Electron and React 
 - Display detailed movie information (covers, synopsis, etc.)
 - Support for local movie database search
 
-## Installation and Running
+### 4. Recommended Settings
+
+![settings.png](docs/screenshots/settings.png)
+
+### 5. Startup Issues Solution
+
+```
+sudo xattr -cr /Applications/uunit.app
+```
+
+## Development Guide
 
 1. Clone the project and install dependencies:
 

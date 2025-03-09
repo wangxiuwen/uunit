@@ -33,6 +33,12 @@ uunit 是一个基于 Electron 和 React 开发的跨平台桌面应用程序，
 
 ![settings.png](docs/screenshots/settings.png)
 
+### 5. 无法启动解决
+
+```
+sudo xattr -cr /Applications/uunit.app
+```
+
 ## 开发指南
 
 1. 克隆项目并安装依赖：
