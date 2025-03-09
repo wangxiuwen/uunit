@@ -33,10 +33,13 @@ class ResourceFixerWorker extends WorkerFramework {
             try {
                 const resource = await Resource.findOne({
                     where: {
-                        failed_count: { [Op.or]: [{ [Op.lt]: 3 }, null, 0, ''] },
+                        failed_count: { [Op.lt]: 5 },  // 限制最大重试次数为5
                         tmdb_id: { [Op.or]: [null, ''] },
                     },
-                    order: [['failed_count', 'ASC']]
+                    order: [
+                     //   [Sequelize.literal('CASE WHEN failed_count IS NULL OR failed_count = 0 THEN 0 ELSE 1 END'), 'ASC'],  // 优先处理未尝试的记录
+                        ['failed_count', 'ASC']  // 其次按失败次数升序
+                    ]
                 });
         
                 if (!resource) {

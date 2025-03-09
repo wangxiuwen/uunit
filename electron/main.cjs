@@ -35,19 +35,31 @@ async function createWindow() {
             mainWindow.webContents.send('open-settings');
           }
         },
-        ,
-    {
-      label: '编辑',
-      submenu: [
-            { label: '复制', accelerator: 'CmdOrCtrl+C', role: 'copy' },
-            { label: '粘贴', accelerator: 'CmdOrCtrl+V', role: 'paste' },
-            { label: '剪切', accelerator: 'CmdOrCtrl+X', role: 'cut' },
-            { label: '撤销', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
-            { label: '重做', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
-            { label: '全选', accelerator: 'CmdOrCtrl+A', role: 'selectAll' }
-        ]
+        {
+            label: '编辑',
+            submenu: [
+                { label: '复制', accelerator: 'CmdOrCtrl+C', role: 'copy' },
+                { label: '粘贴', accelerator: 'CmdOrCtrl+V', role: 'paste' },
+                { label: '剪切', accelerator: 'CmdOrCtrl+X', role: 'cut' },
+                { label: '撤销', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
+                { label: '重做', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
+                { label: '全选', accelerator: 'CmdOrCtrl+A', role: 'selectAll' }
+            ]
         },
         { type: 'separator' },
+        {
+            label: '版本信息',
+            click: () => {
+              const { dialog } = require('electron');
+              const packageJson = require('../package.json');
+              dialog.showMessageBox(mainWindow, {
+                type: 'info',
+                title: '版本信息',
+                message: `uunit ${packageJson.version}`,
+                buttons: ['确定']
+              });
+            }
+          },
         { role: 'quit', label: '退出' }
       ]
     }
