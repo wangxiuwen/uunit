@@ -33,7 +33,7 @@ class ResourceFixerWorker extends WorkerFramework {
             try {
                 const resource = await Resource.findOne({
                     where: {
-                        failed_count: { [Op.or]: [{ [Op.lt]: 20 }, null, 0, ''] },
+                        failed_count: { [Op.or]: [{ [Op.lt]: 3 }, null, 0, ''] },
                         tmdb_id: { [Op.or]: [null, ''] },
                     },
                     order: [['failed_count', 'ASC']]
