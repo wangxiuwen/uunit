@@ -253,7 +253,7 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                                     onChange={async (e) => {
                                         const newStatus = e.target.checked;
                                         try {
-                                            let result = false;
+                                            let result = { success: false };
                                             if (newStatus == true) {
                                                 result = await window.electron.crawler.startCrawlers({
                                                     crawlerSites: crawlSites
@@ -286,7 +286,7 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                                     onChange={async (e) => {
                                         const newStatus = e.target.checked;
                                         try {
-                                            const result = false;
+                                            let result = { success: false };
                                             if (newStatus == true) {
                                                 result = await window.electron.fixer.startFixer();
                                             } else {
