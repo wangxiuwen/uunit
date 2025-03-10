@@ -128,7 +128,7 @@ const Resource = sequelize.define('Resource', {
   },
   failed_count: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: true,
     defaultValue: 0
   },
   magnet: {
@@ -145,7 +145,19 @@ const Resource = sequelize.define('Resource', {
   ftp_link: {
     type: DataTypes.TEXT,
     allowNull: true
-  }
+  },
+  thunder_link: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  baidu_pan: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  quark_pan: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
 }, {
   tableName: 'Resource',
   timestamps: true
@@ -295,7 +307,7 @@ process.on('exit', async () => {
 });
 
 // 获取爬虫状态
-async function getCrawlerStatus() {
+async function getCrawlerEnabled() {
   try {
     const setting = await Settings.findByPk('crawler_enabled');
     return setting && setting.value === '1' ? true : false;
@@ -305,8 +317,7 @@ async function getCrawlerStatus() {
   }
 }
 
-
-async function getFixEnabled() {
+async function getFixerEnabled() {
     try {
       const setting = await Settings.findByPk('fixer_enabled');
       return setting && setting.value === '1' ? true : false;
@@ -317,7 +328,7 @@ async function getFixEnabled() {
 }
 
 // 保存爬虫状态
-async function saveCrawlerStatus(enabled) {
+async function saveCrawlerEnabled(enabled) {
   try {
     await Settings.upsert({
       key: 'crawler_enabled',
@@ -365,12 +376,13 @@ module.exports = {
   getSetting,
   initDatabase,
   closeDatabase,
-  getFixEnabled,
+  getCrawlerEnabled,
+  saveCrawlerEnabled,
+  getCrawlSites,
+  saveCrawlSites,
+  getFixerEnabled,
   Settings,
   CrawlTasks,
   Resource,
   Op,
-  getCrawlerStatus,
-  saveCrawlerStatus,
-  getCrawlSites
 };

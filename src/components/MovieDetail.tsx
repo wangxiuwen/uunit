@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Container, Typography, Grid, Paper, Skeleton, IconButton, Snackbar } from '@mui/material';
+import { Box, Container, Typography, Grid, Paper, Skeleton, IconButton, Snackbar, Button } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import { Movie } from '../types/global';
 
 const MovieDetail = () => {
@@ -10,12 +11,32 @@ const MovieDetail = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
     const [appPath, setAppPath] = useState<string>('');
+
+    const handleRefreshTMDB = async () => {
+        if (!movie?.id) return;
+        try {
+            setLoading(true);
+            await window.electron.fixer.refreshMovieInfo(movie.id);
+            const updatedMovie = await window.electron.database.getMovie(movie.id);
+            setMovie(updatedMovie);
+            setSnackbarMessage('电影信息更新成功');
+            setSnackbarOpen(true);
+        } catch (err) {
+            console.error('更新电影信息失败:', err);
+            setSnackbarMessage('更新电影信息失败，请稍后重试');
+            setSnackbarOpen(true);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleCopyMagnet = async () => {
         if (movie?.magnet) {
             try {
                 await navigator.clipboard.writeText(movie.magnet);
+                setSnackbarMessage('链接已复制到剪贴板');
                 setSnackbarOpen(true);
             } catch (err) {
                 console.error('复制失败:', err);
@@ -113,9 +134,19 @@ const MovieDetail = () => {
                     </Paper>
                 </Grid>
                 <Grid item xs={12} md={8}>
-                    <Typography variant="h4" component="h1" gutterBottom>
-                        {movie.originalTitle}
-                    </Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+                        <Typography variant="h4" component="h1">
+                            {movie.originalTitle}
+                        </Typography>
+                        <Button
+                            variant="outlined"
+                            startIcon={<RefreshIcon />}
+                            onClick={handleRefreshTMDB}
+                            disabled={loading}
+                        >
+                            更新信息
+                        </Button>
+                    </Box>
                     {movie.title && movie.title !== movie.originalTitle && (
                         <Typography variant="h6" color="text.secondary" gutterBottom>
                             {movie.title}
@@ -166,7 +197,7 @@ const MovieDetail = () => {
                                 open={snackbarOpen}
                                 autoHideDuration={2000}
                                 onClose={() => setSnackbarOpen(false)}
-                                message="链接已复制到剪贴板"
+                                message={snackbarMessage}
                                 anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
                             />
                         </Box>

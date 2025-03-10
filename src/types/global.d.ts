@@ -35,6 +35,7 @@ declare global {
                 updateStatus: (params: { enabled: boolean; crawlerSites: Map[] }) => Promise<{ success: boolean }>;
             };
             fixer: {
+                refreshMovieInfo(id: number): Promise<boolean>;
                 updateStatus: (params: { enabled: boolean }) => Promise<{ success: boolean }>;
             };
             tmdb: {

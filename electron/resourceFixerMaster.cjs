@@ -2,10 +2,9 @@ const { ipcMain } = require('electron');
 const path = require('path');
 const { Worker } = require('worker_threads');
 const logger = require('./logger.cjs');
-const {getFixEnabled} = require('./database.cjs');
 let worker = null;
 
-async function startResourceFixer() {
+async function initResourceFixer() {
 
     if (!worker) {
 
@@ -37,8 +36,25 @@ async function startResourceFixer() {
           }
         });
       }
+
+      ipcMain.handle('fixer:start', async (event, { }) => {
+        await startResourceFixer();
+        return { success: true };
+    });
+    
+    ipcMain.handle('fixer:stop', async (event, { }) => {
+        await stopResourceFixer();
+        return { success: true };
+    });
+
+    ipcMain.handle('fixer:task', async (event, data) => {
+        worker.postMessage({ type: 'task', data });
+        return { success: true };
+    });
+}
+
+async function startResourceFixer() {
       worker.postMessage({ type: 'start'});
-      worker.postMessage({ type: 'task'});
 }
 
 async function stopResourceFixer() {
@@ -47,29 +63,11 @@ async function stopResourceFixer() {
     }
 }
 
-async function updateFixerStatus(enabled) {
-    if (enabled) {
-        await startResourceFixer();
-    } else {
-        await stopResourceFixer();
-    }
-}
 
-// 监听来自渲染进程的修复器控制消息
-ipcMain.handle('fixer:updateStatus', async (event, { enabled }) => {
-  await updateFixerStatus(enabled);
-  return { success: true };
-});
-// 确保数据库初始化完成后再开始定时任务
-async function wakeUpFixer() {
-    let enabled = await getFixEnabled();
-    await updateFixerStatus(enabled);
-}
   
 module.exports = {
+    initResourceFixer,
     startResourceFixer,
-    stopResourceFixer,
-    updateFixerStatus,
-    wakeUpFixer
+    stopResourceFixer
 };
 

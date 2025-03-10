@@ -1,4 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
+const { startCrawlers, stopCrawlers } = require('./crawlerMaster.cjs');
 
 // 暴露安全的API给渲染进程
 contextBridge.exposeInMainWorld('electron', {
@@ -38,10 +39,13 @@ contextBridge.exposeInMainWorld('electron', {
   },
   // 爬虫控制相关功能
   crawler: {
-    updateStatus: ({ enabled, crawlerSites }) => ipcRenderer.invoke('crawler:updateStatus', { enabled, crawlerSites })
+    startCrawlers: ({ crawlerSites }) => ipcRenderer.invoke('crawler:start', { crawlerSites }),
+    stopCrawlers: ({ crawlerSites }) => ipcRenderer.invoke('crawler:stop', { crawlerSites })
   },
   // 修复器控制相关功能
   fixer: {
-    updateStatus: ({ enabled }) => ipcRenderer.invoke('fixer:updateStatus', { enabled })
+    startFixer: ({  }) => ipcRenderer.invoke('fixer:start', {  }),
+    stopFixer: ({  }) => ipcRenderer.invoke('fixer:stop', {  }),
+    task: (resource) => ipcRenderer.invoke('fixer:task', {resource})
   }
 });

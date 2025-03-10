@@ -3,8 +3,9 @@ const path = require('path');
 const logger = require('./logger.cjs');
 const { initDatabase } = require('./database.cjs');
 const { AiService } = require('./aiservice.cjs');
-const { wakeUpCrawler } = require('./crawlerMaster.cjs');
-const { wakeUpFixer } = require('./resourceFixerMaster.cjs');
+const { initCrawlers, startCrawlers } = require('./crawlerMaster.cjs');
+const { initResourceFixer, startResourceFixer } = require('./resourceFixerMaster.cjs');
+const {getFixEnabled, getCrawlerEnabled, getCrawlSites} = require('./database.cjs');
 
 let mainWindow = null;
 const aiService = new AiService();
@@ -102,22 +103,23 @@ async function createWindow() {
 // 当Electron完成初始化并准备创建浏览器窗口时调用此方法
 app.whenReady().then(async () => {
   try {
-    // 确保logger最先初始化
     logger.info('应用程序启动');
 
-    // 初始化数据库
     try {
-      await initDatabase();
-      logger.info('数据库初始化完成');
-    } catch (dbError) {
-      logger.error('数据库初始化失败:', dbError);
-      throw dbError;
-    }
+        await initDatabase();
+        logger.info('数据库初始化完成');
+        
+        await initCrawlers(await getCrawlSites());
+        let crawlerEnabled = await getCrawlerEnabled();
+        if (crawlerEnabled) {
+            await startCrawlers(await getCrawlSites());
+        }
 
-    // 加载其他模块
-    try {
-        await wakeUpCrawler();
-        await wakeUpFixer();
+        await initResourceFixer();
+        let fixerEnabled = await getFixEnabled();
+        if (fixerEnabled) {
+            await startResourceFixer();
+        }
       logger.info('系统模块加载完成......');
     } catch (moduleError) {
       logger.error('模块加载失败:', moduleError);

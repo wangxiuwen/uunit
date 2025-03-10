@@ -37,7 +37,7 @@ class WorkerFramework extends EventEmitter {
           this.start(data);
           break;
         case 'stop':
-          this.stop();
+          this.stop(data);
           break;
         case 'task':
           this.executeTask(data);
