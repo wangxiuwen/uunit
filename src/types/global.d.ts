@@ -33,8 +33,8 @@ declare global {
                 getModels: () => Promise<string[]>,
             },
             crawler: {
-                startCrawlers: (params: { crawlSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
-                stopCrawlers: (params: { crawlSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
+                startCrawlers: (params: {crawlSites: { url: string }[]}) => Promise<{ success: boolean }>,
+                stopCrawlers: (params: {crawlSites: { url: string }[]}) => Promise<{ success: boolean }>,
             },
             fixer: {
                 startFixer: () => Promise<{ success: boolean }>,

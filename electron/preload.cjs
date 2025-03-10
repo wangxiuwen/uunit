@@ -39,8 +39,8 @@ contextBridge.exposeInMainWorld('electron', {
   },
   // 爬虫控制相关功能
   crawler: {
-    startCrawlers: ({ crawlerSites }) => ipcRenderer.invoke('crawler:start', { crawlerSites }),
-    stopCrawlers: ({ crawlerSites }) => ipcRenderer.invoke('crawler:stop', { crawlerSites })
+    startCrawlers: (data) => ipcRenderer.invoke('crawler:start', data),
+    stopCrawlers: (data) => ipcRenderer.invoke('crawler:stop', data)
   },
   // 修复器控制相关功能
   fixer: {
