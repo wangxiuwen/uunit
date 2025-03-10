@@ -10,7 +10,7 @@ async function initCrawlers(crawlerSites) {
 
         if (!workers.has(crawlerSite)) {
 
-            logger.info(`启动爬虫任务: ${JSON.stringify(crawlerSite)}`)
+            logger.info(`创建爬虫: ${JSON.stringify(crawlerSite)}`)
             const worker = new Worker(path.join(__dirname, 'crawlerWorker.cjs'));
             
             worker.on('message', (message) => {
@@ -40,8 +40,7 @@ async function initCrawlers(crawlerSites) {
               workers.delete(crawlerSite);
             });
             workers.set(crawlerSite, worker);
-            // 启动worker
-            logger.info(`启动worker: ${JSON.stringify(crawlerSite)}`)
+            logger.info(`创建 worker: ${JSON.stringify(crawlerSite)}`)
         }
     }
 
