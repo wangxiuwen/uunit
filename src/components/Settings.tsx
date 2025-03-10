@@ -78,7 +78,15 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                 if (savedAiModel) setAiModel(savedAiModel);
                 if (savedAiEndpoint) setAiEndpoint(savedAiEndpoint);
                 if (savedAiApikey) setAiApikey(savedAiApikey);
-                if (savedCrawlSites) setCrawlSites(JSON.parse(savedCrawlSites));
+                if (savedCrawlSites) {
+                    try {
+                        const parsedSites = JSON.parse(savedCrawlSites);
+                        setCrawlSites(Array.isArray(parsedSites) ? parsedSites : []);
+                    } catch (err) {
+                        console.error('解析爬虫站点列表失败:', err);
+                        setCrawlSites([]);
+                    }
+                }
                 if (savedCrawlerEnabled) setCrawlerEnabled(savedCrawlerEnabled === '1');
                 if (savedFixerEnabled) setFixerEnabled(savedFixerEnabled === '1');
             } catch (err) {
