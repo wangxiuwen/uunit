@@ -18,11 +18,16 @@ const MovieDetail = () => {
         if (!movie?.id) return;
         try {
             setLoading(true);
-            await window.electron.fixer.task({ id: movie.id });
-            const updatedMovie = await window.electron.database.getMovie(movie.id);
-            setMovie(updatedMovie);
-            setSnackbarMessage('电影信息更新成功');
-            setSnackbarOpen(true);
+            const { success } = await window.electron.fixer.task({ id: movie.id });
+            if (success) {
+                const updatedMovie = await window.electron.database.getMovie(movie.id);
+                setMovie(updatedMovie);
+                setSnackbarMessage('电影信息更新成功');
+                setSnackbarOpen(true);
+            } else {
+                setSnackbarMessage('电影信息更新失败');
+                setSnackbarOpen(true);
+            }
         } catch (err) {
             console.error('更新电影信息失败:', err);
             setSnackbarMessage('更新电影信息失败，请稍后重试');
