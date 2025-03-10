@@ -193,17 +193,16 @@ const MovieDetail = () => {
                                     </IconButton>
                                 </Box>
                             </Paper>
-                            <Snackbar
-                                open={snackbarOpen}
-                                autoHideDuration={2000}
-                                onClose={() => setSnackbarOpen(false)}
-                                message={snackbarMessage}
-                                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-                            />
                         </Box>
                     )}
                 </Grid>
             </Grid>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={3000}
+                onClose={() => setSnackbarOpen(false)}
+                message={snackbarMessage}
+            />
         </Container>
     );
 };

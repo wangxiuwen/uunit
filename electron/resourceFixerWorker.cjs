@@ -48,7 +48,7 @@ class ResourceFixerWorker extends WorkerFramework {
         }
 
         if (id !== null && id !== '') {
-            query.where.id = id;
+            query.where = {id: id};
         }
         console.log(query)
 

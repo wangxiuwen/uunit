@@ -57,7 +57,15 @@ const MovieList = ({ movies, loading, onPageChange, totalPages = 1, currentPage 
                 {movies.map((movie) => (
                     <Grid item xs={12} sm={6} md={4} lg={3} key={movie.id}>
                         <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <CardActionArea onClick={() => navigate(`/movie/${movie.id}`)}>
+                            <CardActionArea onClick={async () => {
+                                try {
+                                    await window.electron.fixer.task({ id: movie.id });
+                                    navigate(`/movie/${movie.id}`);
+                                } catch (error) {
+                                    console.error('更新电影信息失败:', error);
+                                    navigate(`/movie/${movie.id}`);
+                                }
+                            }}>
                                 <CardMedia
                                     component="img"
                                     height="300"
