@@ -253,10 +253,16 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                                     onChange={async (e) => {
                                         const newStatus = e.target.checked;
                                         try {
-                                            const result = await window.electron.crawler.updateStatus({
-                                                enabled: newStatus,
-                                                crawlerSites: crawlSites
-                                            });
+                                            let result = false;
+                                            if (newStatus == true) {
+                                                result = await window.electron.crawler.startCrawlers({
+                                                    crawlerSites: crawlSites
+                                                });
+                                            } else {
+                                                result = await window.electron.crawler.stopCrawlers({
+                                                    crawlerSites: crawlSites
+                                                });
+                                            }
                                             if (result.success) {
                                                 await window.electron.database.saveSetting('crawler_enabled', newStatus ? '1' : '0');
                                                 setCrawlerEnabled(newStatus);
@@ -280,9 +286,12 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                                     onChange={async (e) => {
                                         const newStatus = e.target.checked;
                                         try {
-                                            const result = await window.electron.fixer.updateStatus({
-                                                enabled: newStatus
-                                            });
+                                            const result = false;
+                                            if (newStatus == true) {
+                                                result = await window.electron.fixer.startFixer();
+                                            } else {
+                                                result = await window.electron.fixer.stopFixer();
+                                            }
                                             if (result.success) {
                                                 await window.electron.database.saveSetting('fixer_enabled', newStatus ? '1' : '0');
                                                 setFixerEnabled(newStatus);

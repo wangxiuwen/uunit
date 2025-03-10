@@ -33,15 +33,13 @@ declare global {
                 getModels: () => Promise<string[]>,
             },
             crawler: {
-                startCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<void>,
-                stopCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<void>,
-                updateStatus: (params: { enabled: boolean; crawlerSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
+                startCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<Map<boolean>>,
+                stopCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<Map<boolean>>,
             },
             fixer: {
                 startFixer: () => Promise<void>,
                 stopFixer: () => Promise<void>,
                 task: (params: {id: number}) => Promise<void>,
-                updateStatus: (params: { enabled: boolean }) => Promise<{ success: boolean }>,
             },
             tmdb: {
                 searchMovies: (query: string) => Promise<Movie[]>,
