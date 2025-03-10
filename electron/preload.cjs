@@ -44,8 +44,8 @@ contextBridge.exposeInMainWorld('electron', {
   },
   // 修复器控制相关功能
   fixer: {
-    startFixer: ({  }) => ipcRenderer.invoke('fixer:start', {  }),
-    stopFixer: ({  }) => ipcRenderer.invoke('fixer:stop', {  }),
+    startFixer: () => ipcRenderer.invoke('fixer:start', {}),
+    stopFixer: () => ipcRenderer.invoke('fixer:stop', {}),
     task: (data) => ipcRenderer.invoke('fixer:task', data)
   }
 });

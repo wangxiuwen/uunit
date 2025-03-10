@@ -37,7 +37,7 @@ async function initResourceFixer() {
         });
       }
 
-      ipcMain.handle('fixer:start', async (event, { }) => {
+    ipcMain.handle('fixer:start', async (event, { }) => {
         await startResourceFixer();
         return { success: true };
     });
@@ -54,7 +54,6 @@ async function initResourceFixer() {
 }
 
 async function startResourceFixer() {
-    logger.info("startResourceFixer started")
     worker.postMessage({ type: 'start'});
 }
 
