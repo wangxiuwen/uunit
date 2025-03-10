@@ -45,22 +45,23 @@ async function initCrawlers(crawlerSites) {
     }
 
     // 监听来自渲染进程的爬虫控制消息
-    ipcMain.handle('crawler:start', async (event, { crawlerSites }) => {
-        await startCrawlers(crawlerSites);
+    ipcMain.handle('crawler:start', async (event, data) => {
+        console.log(`startCrawlers:datadatadata ${JSON.stringify(data)}`)
+        await startCrawlers(data.crawlSites);
         return { success: true };
     });
 
-    ipcMain.handle('crawler:stop', async (event, { crawlerSites }) => {
-        await stopCrawlers(crawlerSites);
+    ipcMain.handle('crawler:stop', async (event, { crawlSites }) => {
+        await stopCrawlers(crawlSites);
         return { success: true };
     });
 }
 
 // 启动爬虫任务
-async function startCrawlers() {
-  
-    for (const crawlerSite of crawlerSites) {
-        const worker = workers.get(crawlerSite);
+async function startCrawlers(crawlSites) {
+    console.log(`startCrawlers: ${JSON.stringify(crawlSites)}`)
+    for (const crawlSite of crawlSites) {
+        const worker = workers.get(crawlSite);
         if (worker) {
             worker.postMessage({ type: 'start', data: {crawlerSite} });
         }
@@ -68,12 +69,12 @@ async function startCrawlers() {
 }
 
 // 停止爬虫任务
-async function stopCrawlers(crawlerSite) {
+async function stopCrawlers(crawlSites) {
 
-  const worker = workers.get(crawlerSite);
+  const worker = workers.get(crawlSites);
   if (worker) {
     worker.postMessage({ type: 'stop' });
-    workers.delete(crawlerSite);
+    workers.delete(crawlSites);
   }
 }
 

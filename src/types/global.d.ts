@@ -33,8 +33,8 @@ declare global {
                 getModels: () => Promise<string[]>,
             },
             crawler: {
-                startCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
-                stopCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
+                startCrawlers: (params: { crawlSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
+                stopCrawlers: (params: { crawlSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
             },
             fixer: {
                 startFixer: () => Promise<{ success: boolean }>,
@@ -47,10 +47,12 @@ declare global {
             },
             onOpenSettings: (callback: () => void) => void,
             database: {
+                init: () => Promise<void>,
                 getSetting: (key: string) => Promise<string | null>,
                 saveSetting: (key: string, value: string) => Promise<void>,
                 searchMovies: (query: string, page?: number, pageSize?: number) => Promise<{ movies: Movie[]; totalPages: number; totalCount: number; }>,
                 getMovie: (id: number) => Promise<Movie | null>,
+                saveMovie: (movie: Omit<Movie, 'id'>) => Promise<Movie>,
             },
         };
     }

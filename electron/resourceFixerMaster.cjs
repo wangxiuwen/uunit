@@ -54,7 +54,8 @@ async function initResourceFixer() {
 }
 
 async function startResourceFixer() {
-      worker.postMessage({ type: 'start'});
+    logger.info("startResourceFixer started")
+    worker.postMessage({ type: 'start'});
 }
 
 async function stopResourceFixer() {

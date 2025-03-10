@@ -256,11 +256,11 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                                             let result = { success: false };
                                             if (newStatus == true) {
                                                 result = await window.electron.crawler.startCrawlers({
-                                                    crawlerSites: crawlSites
+                                                    crawlSites: crawlSites
                                                 });
                                             } else {
                                                 result = await window.electron.crawler.stopCrawlers({
-                                                    crawlerSites: crawlSites
+                                                    crawlSites: crawlSites
                                                 });
                                             }
                                             if (result.success) {
