@@ -14,11 +14,11 @@ const MovieDetail = () => {
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [appPath, setAppPath] = useState<string>('');
 
-    const handleRefreshTMDB = async () => {
+    const fixMovie = async () => {
         if (!movie?.id) return;
         try {
             setLoading(true);
-            await window.electron.fixer.refreshMovieInfo(movie.id);
+            await window.electron.fixer.task({ id: movie.id });
             const updatedMovie = await window.electron.database.getMovie(movie.id);
             setMovie(updatedMovie);
             setSnackbarMessage('电影信息更新成功');
@@ -141,7 +141,7 @@ const MovieDetail = () => {
                         <Button
                             variant="outlined"
                             startIcon={<RefreshIcon />}
-                            onClick={handleRefreshTMDB}
+                            onClick={fixMovie}
                             disabled={loading}
                         >
                             更新信息

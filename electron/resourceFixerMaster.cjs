@@ -47,8 +47,9 @@ async function initResourceFixer() {
         return { success: true };
     });
 
-    ipcMain.handle('fixer:task', async (event, data) => {
-        worker.postMessage({ type: 'task', data });
+    ipcMain.handle('fixer:task', async (event, {id}) => {
+        
+        worker.postMessage({ type: 'task', data: {id}});
         return { success: true };
     });
 }

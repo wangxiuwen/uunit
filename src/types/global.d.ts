@@ -20,39 +20,40 @@ interface Movie {
 }
 
 export { type Movie };
+
 declare global {
     interface Window {
         electron: {
             appPath: {
-                getAppPath: () =>  Promise<string>,
+                getAppPath: () => Promise<string>,
+                getPath: (name: string) => Promise<string>,
             },
-            openDevTools(): unknown;
+            openDevTools: () => Promise<{ success: boolean, isOpen: boolean }>,
             aiservice: {
-                call: (prompt: string) => Promise<string>;
-                getModels: () => Promise<string[]>;
-            };
+                getModels: () => Promise<string[]>,
+            },
             crawler: {
-                updateStatus: (params: { enabled: boolean; crawlerSites: Map[] }) => Promise<{ success: boolean }>;
-            };
+                startCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<void>,
+                stopCrawlers: (params: { crawlerSites: Array<{ url: string }> }) => Promise<void>,
+                updateStatus: (params: { enabled: boolean; crawlerSites: Array<{ url: string }> }) => Promise<{ success: boolean }>,
+            },
             fixer: {
-                refreshMovieInfo(id: number): Promise<boolean>;
-                updateStatus: (params: { enabled: boolean }) => Promise<{ success: boolean }>;
-            };
+                startFixer: () => Promise<void>,
+                stopFixer: () => Promise<void>,
+                task: (params: {id: number}) => Promise<void>,
+                updateStatus: (params: { enabled: boolean }) => Promise<{ success: boolean }>,
+            },
             tmdb: {
-                searchMovies: (query: string) => Promise<Movie[]>;
-                searchLocalMovies: (query: string, page?: number, pageSize?: number) => Promise<{ movies: Movie[]; totalPages: number; totalCount: number; }>;
-                getMovieById: (id: number) => Promise<Movie | null>;
-            };
-            onOpenSettings: (callback: () => void) => void;
+                searchMovies: (query: string) => Promise<Movie[]>,
+                getMovieById: (id: number) => Promise<Movie | null>,
+            },
+            onOpenSettings: (callback: () => void) => void,
             database: {
-                init: () => Promise<void>;
-                searchMovies: (query: string, page?: number, pageSize?: number) => Promise<{ movies: Movie[]; totalPages: number; totalCount: number; }>;
-                searchLocalMovies: (query: string, page?: number, pageSize?: number) => Promise<{ movies: Movie[]; totalPages: number; totalCount: number; }>;
-                getMovie: (id: number) => Promise<Movie | null>;
-                saveMovie: (movieData: Omit<Movie, 'id'>) => Promise<Movie>;
-                getSetting: (key: string) => Promise<string | null>;
-                saveSetting: (key: string, value: string) => Promise<void>;
-            };
+                getSetting: (key: string) => Promise<string | null>,
+                saveSetting: (key: string, value: string) => Promise<void>,
+                searchMovies: (query: string, page?: number, pageSize?: number) => Promise<{ movies: Movie[]; totalPages: number; totalCount: number; }>,
+                getMovie: (id: number) => Promise<Movie | null>,
+            },
         };
     }
 }

@@ -21,7 +21,7 @@ class ResourceFixerWorker extends WorkerFramework {
 
         while (this.isRunning) {
             try {
-                await this.doStart();
+                await this.executeTask({});
                 await new Promise(resolve => setTimeout(resolve, 1000));
             } catch (error) {
                 this.handleError('start', error);
@@ -35,9 +35,9 @@ class ResourceFixerWorker extends WorkerFramework {
         logger.info('削刮进程已停止');
     }
 
-    async doStart() {
+    async executeTask({id}) {
 
-        const resource = await Resource.findOne({
+        let query = {
             where: {
                 failed_count: { [Op.lt]: 3 },  // 限制最大重试次数为3
                 tmdb_id: { [Op.or]: [null, ''] },
@@ -45,17 +45,18 @@ class ResourceFixerWorker extends WorkerFramework {
             order: [
                 ['id', 'DESC']
             ]
-        });
+        }
+
+        if (id !== null && id !== '') {
+            query.where.id = id;
+        }
+
+        const resource = await Resource.findOne(query);
 
         if (!resource) {
             logger.info('没有找到需要处理的资源');
             return
         }
-
-        await this.executeTask(resource);
-    }
-
-    async executeTask(resource) {
 
         if (!resource || !resource.title) {
             this.sendMessage('error', { success: false, error: error.message });
