@@ -248,6 +248,7 @@ async function searchMovies(query, page = 1, pageSize = 12) {
         runtime: resource.runtime,
         status: resource.status,
         tmdbId: resource.tmdb_id,
+        ftpLink: resource.ftp_link,
         magnet: resource.magnet,
         createdAt: resource.createdAt,
         updatedAt: resource.updatedAt
@@ -271,20 +272,24 @@ async function getMovie(id) {
     }
 
     return {
-      id: resource.id,
-      title: resource.title,
-      overview: resource.overview || '',
-      posterPath: resource.poster_path,
-      backdropPath: resource.backdrop_path || null,
-      releaseDate: resource.release_date || resource.createdAt,
-      voteAverage: resource.vote_average || 0,
-      genres: resource.genres || '资源',
-      magnet: resource.magnet,
-      originalTitle: resource.original_title,
-      voteCount: resource.vote_count,
-      popularity: resource.popularity,
-      runtime: resource.runtime,
-      status: resource.status
+        id: resource.id,
+        title: resource.title,
+        originalTitle: resource.original_title,
+        overview: resource.overview,
+        posterPath: resource.poster_path ? resource.poster_path : null,
+        backdropPath: resource.backdrop_path ? resource.backdrop_path : null,
+        releaseDate: resource.release_date,
+        voteAverage: resource.vote_average,
+        voteCount: resource.vote_count,
+        popularity: resource.popularity,
+        genres: resource.genres,
+        runtime: resource.runtime,
+        status: resource.status,
+        tmdbId: resource.tmdb_id,
+        ftpLink: resource.ftp_link,
+        magnet: resource.magnet,
+        createdAt: resource.createdAt,
+        updatedAt: resource.updatedAt
     };
   } catch (error) {
     console.error('获取电影详情失败:', error);

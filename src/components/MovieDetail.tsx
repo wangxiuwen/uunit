@@ -195,6 +195,44 @@ const MovieDetail = () => {
                             </Paper>
                         </Box>
                     )}
+                    {movie.ftpLink && (
+                        <Box sx={{ mt: 3 }}>
+                            <Typography variant="h6" gutterBottom>
+                                FTP 链接
+                            </Typography>
+                            <Paper sx={{ p: 2, bgcolor: 'background.default' }}>
+                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
+                                    <Typography
+                                        variant="body2"
+                                        component="div"
+                                        sx={{
+                                            wordBreak: 'break-all',
+                                            fontFamily: 'monospace',
+                                            cursor: 'text',
+                                            userSelect: 'text',
+                                            flex: 1
+                                        }}
+                                    >
+                                        {movie.ftpLink}
+                                    </Typography>
+                                    <IconButton
+                                        onClick={() => {
+                                            if (movie.ftpLink) {
+                                                navigator.clipboard.writeText(movie.ftpLink || '');
+                                                setSnackbarMessage('FTP 链接已复制到剪贴板');
+                                                setSnackbarOpen(true);
+                                            }
+                                        }}
+                                        size="small"
+                                        sx={{ mt: -0.5 }}
+                                        title="复制链接"
+                                    >
+                                        <ContentCopyIcon fontSize="small" />
+                                    </IconButton>
+                                </Box>
+                            </Paper>
+                        </Box>
+                    )}
                 </Grid>
             </Grid>
             <Snackbar

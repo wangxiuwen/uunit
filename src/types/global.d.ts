@@ -17,6 +17,7 @@ interface Movie {
     video: boolean;
     adult: boolean;
     magnet?: string;
+    ftpLink?: string;
 }
 
 export { type Movie };

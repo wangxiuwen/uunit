@@ -1,7 +1,7 @@
 {
   "name": "uunit",
   "private": true,
-  "version": "v0.0.1-11-gc0e5463",
+  "version": "v0.0.1-14-g178b443",
   "description": "A cross-platform desktop application built with Electron and React",
   "author": {
     "name": "William Wong"
