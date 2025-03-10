@@ -5,7 +5,7 @@ const { initDatabase } = require('./database.cjs');
 const { AiService } = require('./aiservice.cjs');
 const { initCrawlers, startCrawlers } = require('./crawlerMaster.cjs');
 const { initResourceFixer, startResourceFixer } = require('./resourceFixerMaster.cjs');
-const {getFixEnabled, getCrawlerEnabled, getCrawlSites} = require('./database.cjs');
+const {getFixerEnabled, getCrawlerEnabled, getCrawlSites} = require('./database.cjs');
 
 let mainWindow = null;
 const aiService = new AiService();
@@ -116,7 +116,7 @@ app.whenReady().then(async () => {
         }
 
         await initResourceFixer();
-        let fixerEnabled = await getFixEnabled();
+        let fixerEnabled = await getFixerEnabled();
         if (fixerEnabled) {
             await startResourceFixer();
         }

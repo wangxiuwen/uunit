@@ -46,6 +46,6 @@ contextBridge.exposeInMainWorld('electron', {
   fixer: {
     startFixer: ({  }) => ipcRenderer.invoke('fixer:start', {  }),
     stopFixer: ({  }) => ipcRenderer.invoke('fixer:stop', {  }),
-    task: (resource) => ipcRenderer.invoke('fixer:task', {resource})
+    task: (data) => ipcRenderer.invoke('fixer:task', data)
   }
 });
