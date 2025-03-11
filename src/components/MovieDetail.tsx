@@ -147,7 +147,7 @@ const MovieDetail = () => {
                                 <Box
                                     component="img"
                                     src={movie.posterPath ? movie.posterPath : (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
-                                    alt={movie.title}
+                                    alt={movie.title ? movie.title.slice(0, 20) : ''}
                                     sx={{
                                         width: '100%',
                                         aspectRatio: '2/3',
