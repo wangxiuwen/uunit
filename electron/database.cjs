@@ -259,7 +259,6 @@ async function searchMovies(query, page = 1, pageSize = 12) {
         runtime: resource.runtime,
         status: resource.status,
         tmdbId: resource.tmdb_id,
-        thunderLink: resource.thunder_link,
         baiduPan: resource.baidu_pan,
         quarkPan: resource.quark_pan,
         ftpLink: resource.ftp_link,

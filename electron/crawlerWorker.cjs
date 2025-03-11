@@ -162,10 +162,10 @@ class CrawlerWorker extends WorkerFramework {
 
     if(thunderLinks.length!= 0) {
         for (const thunderLink of thunderLinks) {
-            let resourceTitle = `${title || ''} ${ftpLink.name}`.trim();
+            let resourceTitle = `${title || ''} ${thunderLink.name}`.trim();
             await Resource.create({
             title: resourceTitle,
-            ftp_link: thunderLink.link
+            thunder_link: thunderLink.link
             });
             this.sendMessage('info', { 
             message: `thunder 资源已保存: ${resourceTitle}`,
