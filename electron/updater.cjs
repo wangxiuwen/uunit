@@ -87,17 +87,7 @@ class Updater {
         }
 
         ipcMain.handle('check-for-update', () => {
-            if (process.env.NODE_ENV === 'development') {
-                this.sendStatusToWindow('error', '开发环境不支持自动更新');
-                dialog.showMessageBox(this.mainWindow, {
-                    type: 'info',
-                    title: '检查更新',
-                    message: '开发环境不支持自动更新',
-                    buttons: ['确定']
-                });
-                return;
-            }
-            return autoUpdater.checkForUpdates();
+            return this.checkForUpdates();
         });
 
         ipcMain.handle('download-update', () => {
