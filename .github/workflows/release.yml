@@ -62,6 +62,8 @@ jobs:
 
       - name: Build Electron app
         run: npm run electron:build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create source code archives
         run: |
