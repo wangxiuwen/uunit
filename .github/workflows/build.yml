@@ -1,14 +1,17 @@
-name: Release
+name: Build
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
 
 jobs:
-  release:
-    permissions:
-      contents: write
+  build:
     strategy:
       matrix:
         os: [macos-latest, ubuntu-latest, windows-latest]
@@ -31,13 +34,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install Python 3.11 (Windows)
         if: matrix.os == 'windows-latest'
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -48,11 +51,11 @@ jobs:
       - name: Install node-gyp globally
         run: npm install -g node-gyp
 
-      - name: Install dependencies
-        run: npm ci
-
       - name: version
         run: npm run prebuild
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Rebuild SQLite3 for Electron
         run: npm rebuild sqlite3 --runtime=electron --target=20.18.1 --dist-url=https://electronjs.org/headers
@@ -62,21 +65,13 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create source code archives
-        run: |
-          zip -r source-code.zip . -x "node_modules/*" "dist/*" "release/*"
-          tar --exclude="./node_modules" --exclude="./dist" --exclude="./release" -czf source-code.tar.gz .
-        if: matrix.os == 'macos-latest'
-
       - name: Upload artifacts
-        uses: softprops/action-gh-release@v1
+        uses: actions/upload-artifact@v3
         with:
-          files: |
+          name: build-${{ matrix.os }}
+          path: |
             release/*.dmg
             release/*.exe
             release/*.AppImage
             release/*.snap
-            source-code.zip
-            source-code.tar.gz
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if-no-files-found: ignore
