@@ -90,7 +90,6 @@
       "gatekeeperAssess": false
     },
     "win": {
-        "identity": null,
         "target": [
             "nsis"
         ]
