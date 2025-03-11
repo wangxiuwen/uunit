@@ -4,8 +4,6 @@ import { Box, Container, Typography, Grid, Paper, Skeleton, IconButton, Snackbar
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Movie } from '../types/global';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 
 const MovieDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -124,214 +122,144 @@ const MovieDetail = () => {
     }
 
     return (
-        <Container sx={{ mt: 4 }}>
-            <Grid container spacing={4}>
-                <Grid item xs={12} md={4}>
-                    <Paper elevation={3}>
-                        <Box
-                            component="img"
-                            src={movie.posterPath ? movie.posterPath : (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
-                            alt={movie.title}
-                            sx={{
-                                width: '100%',
-                                height: 'auto',
-                                display: 'block',
-                                borderRadius: 1
-                            }}
-                        />
-                    </Paper>
-                </Grid>
-                <Grid item xs={12} md={8}>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                        <Typography variant="h4" component="h1">
-                            {movie.originalTitle}
-                        </Typography>
-                        <Button
-                            variant="outlined"
-                            startIcon={<RefreshIcon />}
-                            onClick={fixMovie}
-                            disabled={loading}
-                        >
-                            更新信息
-                        </Button>
-                    </Box>
-                    {movie.title && movie.title !== movie.originalTitle && (
-                        <Typography variant="h6" color="text.secondary" gutterBottom>
-                            {movie.title}
-                        </Typography>
-                    )}
-                    <Typography variant="subtitle1" color="text.secondary" gutterBottom>
-                        {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '未知年份'} | {movie.genres || '未分类'}
-                    </Typography>
-                    <Typography variant="body1" paragraph sx={{ mt: 2 }}>
-                        {movie.overview || '暂无简介'}
-                    </Typography>
-                    {movie.voteAverage > 0 && (
-                        <Typography variant="subtitle1" color="text.secondary">
-                            评分：{movie.voteAverage.toFixed(1)}/10
-                        </Typography>
-                    )}
-                    {movie.magnet && (
-                        <Box sx={{ mt: 3 }}>
-                            <Typography variant="h6" gutterBottom>
-                                下载链接
-                            </Typography>
-                            <Paper sx={{ p: 2, bgcolor: 'background.default' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                                    <Typography
-                                        variant="body2"
-                                        component="div"
-                                        sx={{
-                                            wordBreak: 'break-all',
-                                            fontFamily: 'monospace',
-                                            cursor: 'text',
-                                            userSelect: 'text',
-                                            flex: 1
-                                        }}
-                                    >
-                                        {movie.magnet}
-                                    </Typography>
-                                    <IconButton
-                                        onClick={handleCopyMagnet}
-                                        size="small"
-                                        sx={{ mt: -0.5 }}
-                                        title="复制链接"
-                                    >
-                                        <ContentCopyIcon fontSize="small" />
-                                    </IconButton>
-                                </Box>
-                            </Paper>
-                        </Box>
-                    )}
-                    {movie.ftpLink && (
-                        <Box sx={{ mt: 3 }}>
-                            <Typography variant="h6" gutterBottom>
-                                FTP 链接
-                            </Typography>
-                            <Paper sx={{ p: 2, bgcolor: 'background.default' }}>
-                                <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-                                    <Typography
-                                        variant="body2"
-                                        component="div"
-                                        sx={{
-                                            wordBreak: 'break-all',
-                                            fontFamily: 'monospace',
-                                            cursor: 'text',
-                                            userSelect: 'text',
-                                            flex: 1
-                                        }}
-                                    >
-                                        {movie.ftpLink}
-                                    </Typography>
-                                    <IconButton
-                                        onClick={() => {
-                                            if (movie.ftpLink) {
-                                                navigator.clipboard.writeText(movie.ftpLink || '');
-                                                setSnackbarMessage('FTP 链接已复制到剪贴板');
-                                                setSnackbarOpen(true);
-                                            }
-                                        }}
-                                        size="small"
-                                        sx={{ mt: -0.5 }}
-                                        title="复制链接"
-                                    >
-                                        <ContentCopyIcon fontSize="small" />
-                                    </IconButton>
-                                </Box>
-                            </Paper>
-                        </Box>
-                    )}
-                </Grid>
-            </Grid>
-
-            {/* {movie.backdropPath && (
-                <Box sx={{ mt: 4 }}>
-                    <Typography variant="h6" gutterBottom>剧照</Typography>
-                    <Swiper
-                        modules={[Navigation, Pagination, Autoplay]}
-                        spaceBetween={20}
-                        slidesPerView={1}
-                        navigation
-                        pagination={{ clickable: true }}
-                        autoplay={{ delay: 3000 }}
-                        style={{ borderRadius: '8px', overflow: 'hidden' }}
-                    >
-                        <SwiperSlide>
-                            <Box
-                                component="img"
-                                src={movie.backdropPath}
-                                alt={movie.title}
+        <Container maxWidth="lg" sx={{ mt: 6, mb: 4, display: 'flex', justifyContent: 'center' }}>
+            {error ? (
+                <Typography color="error" variant="h6" align="center">{error}</Typography>
+            ) : movie ? (
+                <Grid container spacing={4} sx={{ maxWidth: '1200px', margin: '0 auto' }}>
+                    <Grid item xs={12} md={4}>
+                        <Box sx={{
+                            position: 'sticky',
+                            top: 88,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            alignItems: 'center'
+                        }}>
+                            <Paper
+                                elevation={3}
                                 sx={{
-                                    width: '100%',
-                                    height: 'auto',
-                                    maxHeight: '500px',
-                                    objectFit: 'cover'
+                                    borderRadius: 2,
+                                    overflow: 'hidden',
+                                    position: 'relative'
                                 }}
-                            />
-                        </SwiperSlide>
-                    </Swiper>
-                </Box>
-            )} */}
-
-            {movie.cast && movie.cast.length > 0 && (
-                <Box sx={{ mt: 4 }}>
-                    <Typography variant="h6" gutterBottom>演员表</Typography>
-                    <Swiper
-                        modules={[Navigation, Pagination, Autoplay]}
-                        spaceBetween={20}
-                        slidesPerView={6}
-                        navigation
-                        pagination={{ clickable: true }}
-                        autoplay={{ delay: 3000 }}
-                        breakpoints={{
-                            320: { slidesPerView: 2 },
-                            480: { slidesPerView: 3 },
-                            768: { slidesPerView: 4 },
-                            1024: { slidesPerView: 6 }
-                        }}
-                    >
-                        {movie.cast.map((actor) => (
-                            <SwiperSlide key={actor.id}>
-                                <Paper
-                                    elevation={2}
+                            >
+                                <Box
+                                    component="img"
+                                    src={movie.posterPath ? movie.posterPath : (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
+                                    alt={movie.title}
                                     sx={{
-                                        p: 2,
-                                        textAlign: 'center',
-                                        height: '100%',
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                        alignItems: 'center'
+                                        width: '100%',
+                                        aspectRatio: '2/3',
+                                        objectFit: 'cover'
+                                    }}
+                                />
+                            </Paper>
+                            {movie.magnet && (
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    startIcon={<ContentCopyIcon />}
+                                    onClick={handleCopyMagnet}
+                                    fullWidth
+                                    sx={{
+                                        py: 1.5,
+                                        borderRadius: 2,
+                                        bgcolor: '#4e6ef2',
+                                        '&:hover': {
+                                            bgcolor: '#4662D9'
+                                        }
                                     }}
                                 >
-                                    <Box
-                                        component="img"
-                                        src={actor.profilePath || (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
-                                        alt={actor.name}
-                                        sx={{
-                                            width: '100%',
-                                            height: 'auto',
-                                            aspectRatio: '2/3',
-                                            objectFit: 'cover',
-                                            borderRadius: 1,
-                                            mb: 1
-                                        }}
-                                    />
-                                    <Typography variant="subtitle2" noWrap>{actor.name}</Typography>
-                                    <Typography variant="caption" color="text.secondary" noWrap>
-                                        {actor.character}
+                                    复制下载链接
+                                </Button>
+                            )}
+                        </Box>
+                    </Grid>
+                    <Grid item xs={12} md={8}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+                            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                <Box sx={{ flex: 1 }}>
+                                    <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
+                                        {movie.title}
                                     </Typography>
-                                </Paper>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </Box>
-            )}
+                                    {movie.originalTitle && movie.originalTitle !== movie.title && (
+                                        <Typography variant="h6" color="text.secondary" gutterBottom>
+                                            {movie.originalTitle}
+                                        </Typography>
+                                    )}
+                                </Box>
+                                <IconButton
+                                    onClick={fixMovie}
+                                    sx={{
+                                        bgcolor: 'action.hover',
+                                        '&:hover': { bgcolor: 'action.selected' }
+                                    }}
+                                >
+                                    <RefreshIcon />
+                                </IconButton>
+                            </Box>
 
+                            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap', justifyContent: 'center' }}>
+                                <Typography variant="body1" color="text.secondary">
+                                    {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '未知年份'}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    {movie.runtime ? `${movie.runtime}分钟` : '片长未知'}
+                                </Typography>
+                                <Typography variant="body1" color="text.secondary">
+                                    {movie.genres || '未分类'}
+                                </Typography>
+                            </Box>
+
+                            <Box>
+                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#4e6ef2' }}>
+                                    电影信息
+                                </Typography>
+                                <Grid container spacing={2}>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1" color="text.secondary">
+                                            评分：{movie.voteAverage?.toFixed(1) || '暂无'}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1" color="text.secondary">
+                                            投票数：{movie.voteCount || 0}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1" color="text.secondary">
+                                            人气：{Math.round(movie.popularity || 0)}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={12} sm={6}>
+                                        <Typography variant="body1" color="text.secondary">
+                                            语言：{movie.originalLanguage?.toUpperCase() || '未知'}
+                                        </Typography>
+                                    </Grid>
+                                </Grid>
+                            </Box>
+
+                            <Box>
+                                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#4e6ef2' }}>
+                                    剧情简介
+                                </Typography>
+                                <Typography variant="body1" paragraph sx={{ lineHeight: 1.8 }}>
+                                    {movie.overview || '暂无简介'}
+                                </Typography>
+                            </Box>
+
+
+                        </Box>
+                    </Grid>
+                </Grid>
+            ) : null}
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
                 onClose={() => setSnackbarOpen(false)}
                 message={snackbarMessage}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
             />
         </Container>
     );

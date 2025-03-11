@@ -1,6 +1,5 @@
 const axios = require('axios');
 const { Settings } = require('./database.cjs');
-const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
 class TMDBApi {
   constructor() {
@@ -116,8 +115,8 @@ class TMDBApi {
           id: result.id,
           title: result.title,
           overview: result.overview,
-          posterPath: result.poster_path ? IMAGE_BASE_URL + result.poster_path : null,
-          backdropPath: result.backdrop_path ? IMAGE_BASE_URL + result.backdrop_path : null,
+          posterPath: result.poster_path,
+          backdropPath: result.backdrop_path,
           releaseDate: result.release_date || '',
           voteAverage: result.vote_average || 0,
           voteCount: result.vote_count,
@@ -161,14 +160,14 @@ class TMDBApi {
         id: actor.id,
         name: actor.name,
         character: actor.character,
-        profile_path: actor.profile_path ? IMAGE_BASE_URL + actor.profile_path : null
+        profile_path: actor.profile_path
       }));
 
       return {
         id: movieResponse.data.id,
         title: movieResponse.data.title,
         overview: movieResponse.data.overview,
-        posterPath: movieResponse.data.poster_path ? IMAGE_BASE_URL + movieResponse.data.poster_path : null,
+        posterPath: movieResponse.data.poster_path,
         releaseDate: movieResponse.data.release_date || '',
         voteAverage: movieResponse.data.vote_average || 0,
         genres: movieResponse.data.genres.map(genre => genre.name).join(', '),
@@ -178,7 +177,7 @@ class TMDBApi {
         video: movieResponse.data.video,
         voteCount: movieResponse.data.vote_count,
         adult: movieResponse.data.adult,
-        backdropPath: movieResponse.data.backdrop_path ? IMAGE_BASE_URL + movieResponse.data.backdrop_path : null,
+        backdropPath: movieResponse.data.backdrop_path,
         runtime: movieResponse.data.runtime,
         status: movieResponse.data.status,
         cast: cast

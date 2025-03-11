@@ -249,7 +249,7 @@ async function searchMovies(query, page = 1, pageSize = 12) {
         title: resource.title,
         originalTitle: resource.original_title,
         overview: resource.overview,
-        posterPath: resource.poster_path ? resource.poster_path : null,
+        posterPath: resource.poster_path ? IMAGE_BASE_URL + resource.poster_path : null,
         backdropPath: resource.backdrop_path ? resource.backdrop_path : null,
         releaseDate: resource.release_date,
         voteAverage: resource.vote_average,
@@ -293,16 +293,13 @@ async function getMovie(id) {
   try {
     const resource = await Resource.findByPk(id);
     if (!resource) return null;
-    if (resource.poster_path != null) {
-        resource.poster_path = IMAGE_BASE_URL + resource.poster_path || null; 
-    }
 
     return {
         id: resource.id,
         title: resource.title,
         originalTitle: resource.original_title,
         overview: resource.overview,
-        posterPath: resource.poster_path ? resource.poster_path : null,
+        posterPath: resource.poster_path ? IMAGE_BASE_URL + resource.poster_path : null,
         backdropPath: resource.backdrop_path ? resource.backdrop_path : null,
         releaseDate: resource.release_date,
         voteAverage: resource.vote_average,
