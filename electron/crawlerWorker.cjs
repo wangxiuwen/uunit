@@ -122,7 +122,7 @@ class CrawlerWorker extends WorkerFramework {
 
     const magnets = this.extractMagnets(content) || [];
     const ftpLinks = this.extractFtpLinks(content) || [];
-    // todo thunder://
+    const thunderLinks = this.extractThunderLinks(content) || [];
 
     if (magnets.length != 0) {
         for (const magnet of magnets) {
@@ -156,6 +156,20 @@ class CrawlerWorker extends WorkerFramework {
             this.sendMessage('info', { 
             message: `FTP资源已保存: ${resourceTitle}`,
             data: { title: resourceTitle, ftp_link: ftpLink.link }
+            });
+        }
+    }
+
+    if(thunderLinks.length!= 0) {
+        for (const thunderLink of thunderLinks) {
+            let resourceTitle = `${title || ''} ${ftpLink.name}`.trim();
+            await Resource.create({
+            title: resourceTitle,
+            ftp_link: thunderLink.link
+            });
+            this.sendMessage('info', { 
+            message: `thunder 资源已保存: ${resourceTitle}`,
+            data: { title: resourceTitle, thunder_link: thunderLink.link }
             });
         }
     }
@@ -202,6 +216,20 @@ class CrawlerWorker extends WorkerFramework {
     const $ = cheerio.load(html);
     let ftpLinks = [];
     $('a[href^="ftp://"]').each((_, element) => {
+      const link = $(element).attr('href');
+      const name = this.extractNameFromFtpLink(link);
+      ftpLinks.push({
+        link: link,
+        name: name
+      });
+    });
+    return ftpLinks;
+  }
+
+  extractThunderLinks(html) {
+    const $ = cheerio.load(html);
+    let ftpLinks = [];
+    $('a[href^="thunder://"]').each((_, element) => {
       const link = $(element).attr('href');
       const name = this.extractNameFromFtpLink(link);
       ftpLinks.push({
