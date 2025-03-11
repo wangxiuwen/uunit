@@ -249,6 +249,49 @@ const MovieDetail = () => {
                                 </Typography>
                             </Box>
 
+                            {movie.cast && movie.cast.length > 0 && (
+                                <Box>
+                                    <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', color: '#4e6ef2', mt: 3 }}>
+                                        演员表
+                                    </Typography>
+                                    <Grid container spacing={2}>
+                                        {movie.cast.map((actor) => (
+                                            <Grid item xs={6} sm={4} md={3} key={actor.id}>
+                                                <Paper
+                                                    elevation={1}
+                                                    sx={{
+                                                        p: 2,
+                                                        display: 'flex',
+                                                        flexDirection: 'column',
+                                                        alignItems: 'center',
+                                                        gap: 1,
+                                                        height: '100%',
+                                                        borderRadius: 2
+                                                    }}
+                                                >
+                                                    <Box
+                                                        component="img"
+                                                        src={actor.profilePath ? actor.profilePath : (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
+                                                        alt={actor.name}
+                                                        sx={{
+                                                            width: 100,
+                                                            height: 100,
+                                                            borderRadius: '50%',
+                                                            objectFit: 'cover'
+                                                        }}
+                                                    />
+                                                    <Typography variant="subtitle1" sx={{ fontWeight: 'medium', textAlign: 'center' }}>
+                                                        {actor.name}
+                                                    </Typography>
+                                                    <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center' }}>
+                                                        {actor.character}
+                                                    </Typography>
+                                                </Paper>
+                                            </Grid>
+                                        ))}
+                                    </Grid>
+                                </Box>
+                            )}
 
                         </Box>
                     </Grid>
