@@ -4,13 +4,17 @@ import { Link as RouterLink, useNavigate, useLocation } from 'react-router-dom';
 import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import SettingsIcon from '@mui/icons-material/Settings';
+import ViewModuleIcon from '@mui/icons-material/ViewModule';
+import ViewListIcon from '@mui/icons-material/ViewList';
 
 interface NavbarProps {
     onSearch?: (query: string) => void;
     onSettingsClick?: () => void;
+    viewMode?: 'grid' | 'list';
+    onViewModeChange?: (mode: 'grid' | 'list') => void;
 }
 
-const Navbar = ({ onSearch, onSettingsClick }: NavbarProps = {}) => {
+const Navbar = ({ onSearch, onSettingsClick, viewMode = 'grid', onViewModeChange }: NavbarProps = {}) => {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -89,6 +93,15 @@ const Navbar = ({ onSearch, onSettingsClick }: NavbarProps = {}) => {
                 </Box>
 
                 <Box>
+                    <Tooltip title={viewMode === 'grid' ? '列表视图' : '网格视图'}>
+                        <IconButton
+                            color="inherit"
+                            onClick={() => onViewModeChange?.(viewMode === 'grid' ? 'list' : 'grid')}
+                            size="large"
+                        >
+                            {viewMode === 'grid' ? <ViewListIcon /> : <ViewModuleIcon />}
+                        </IconButton>
+                    </Tooltip>
                     <Tooltip title="首页">
                         <IconButton
                             color="inherit"

@@ -16,6 +16,7 @@ function App() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [searchQuery, setSearchQuery] = useState('');
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
     useEffect(() => {
         if (window.electron && window.electron.onOpenSettings) {
@@ -68,7 +69,7 @@ function App() {
         try {
             setLoading(true);
             setError('');
-            setSearchQuery(query); // 保存搜索关键词
+            setSearchQuery(query);
             const { movies: results, totalPages: pages } = await window.electron.database.searchMovies(query, 1, 12);
             const mappedResults = results.map((movie: Movie) => ({
                 id: movie.id,
@@ -126,9 +127,9 @@ function App() {
                 adult: movie.adult || false,
                 magnet: movie.magnet
             }));
+            setMovies(mappedResults);
             setCurrentPage(page);
             setTotalPages(pages);
-            setMovies(mappedResults);
         } catch (err) {
             console.error('加载电影失败:', err);
             setError('加载电影失败，请稍后重试');
@@ -140,44 +141,37 @@ function App() {
     return (
         <Router>
             <CssBaseline />
-            <Box sx={{ display: 'flex', flexGrow: 1, flexDirection: 'column', height: '100vh' }}>
-                <Navbar onSearch={handleSearch} onSettingsClick={() => setSettingsOpen(true)} />
-                <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
-
-                <Routes>
-                    <Route path="*" element={
-                        <Container component="main" maxWidth={false} sx={{ flexGrow: 1, py: 3, mt: 8 }}>
-                            <Routes>
-                                <Route path="/" element={
-                                    <>
-                                        {error && (
-                                            <Box sx={{ mt: 2, textAlign: 'center' }}>
-                                                <Typography color="error">{error}</Typography>
-                                            </Box>
-                                        )}
-                                        <MovieList
-                                            movies={movies}
-                                            loading={loading}
-                                            currentPage={currentPage}
-                                            totalPages={totalPages}
-                                            onPageChange={handlePageChange}
-                                        />
-                                    </>
-                                } />
-                                <Route path="/movie/:id" element={<MovieDetail />} />
-                            </Routes>
-                        </Container>
-                    } />
-                </Routes>
-
-                <Box component="footer" sx={{ py: 3, bgcolor: 'background.paper', mt: 'auto' }}>
-                    <Container maxWidth="lg">
-                        <Typography variant="body2" color="text.secondary" align="center">
-                            © {new Date().getFullYear()} 电影搜索应用
-                        </Typography>
-                    </Container>
-                </Box>
+            <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+                <Navbar
+                    onSearch={handleSearch}
+                    onSettingsClick={() => setSettingsOpen(true)}
+                    viewMode={viewMode}
+                    onViewModeChange={setViewMode}
+                />
+                <Container maxWidth="xl" sx={{ mt: 8, mb: 4, flex: 1 }}>
+                    <Routes>
+                        <Route path="/" element={
+                            <>
+                                {error && (
+                                    <Typography color="error" sx={{ mt: 2, textAlign: 'center' }}>
+                                        {error}
+                                    </Typography>
+                                )}
+                                <MovieList
+                                    movies={movies}
+                                    loading={loading}
+                                    onPageChange={handlePageChange}
+                                    totalPages={totalPages}
+                                    currentPage={currentPage}
+                                    viewMode={viewMode}
+                                />
+                            </>
+                        } />
+                        <Route path="/movie/:id" element={<MovieDetail />} />
+                    </Routes>
+                </Container>
             </Box>
+            <Settings open={settingsOpen} onClose={() => setSettingsOpen(false)} />
         </Router>
     );
 }
