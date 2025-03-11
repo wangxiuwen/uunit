@@ -1,3 +1,11 @@
+interface Cast {
+    id: number;
+    name: string;
+    character: string;
+    profilePath: string | null;
+    order: number;
+}
+
 interface Movie {
     id: number;
     tmdbId: number;
@@ -18,6 +26,7 @@ interface Movie {
     adult: boolean;
     magnet?: string;
     ftpLink?: string;
+    cast?: Cast[];
 }
 
 export { type Movie };

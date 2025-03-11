@@ -147,10 +147,11 @@ class ResourceFixerWorker extends WorkerFramework {
             vote_average: movieInfo.voteAverage,
             vote_count: movieInfo.voteCount,
             popularity: movieInfo.popularity,
-            genres: movieInfo.genres,
+            genres: JSON.stringify(movieInfo.genres),
             runtime: movieInfo.runtime,
             status: movieInfo.status,
-            tmdb_id: movieInfo.id
+            tmdb_id: movieInfo.id,
+            cast: JSON.stringify(movieInfo.cast)
         }, {
             where: { id: resource.id }
         });

@@ -98,6 +98,20 @@ class TMDBApi {
           .map(id => genreMap.get(id) || '')
           .filter(name => name !== '');
         
+        // 获取每个电影的演员信息
+        let cast = [];
+        try {
+          const creditsResponse = await axiosInstance.get(`/movie/${result.id}/credits`, {
+            params: {
+              api_key: await this.getApiKey(),
+              language: 'zh-CN'
+            }
+          });
+          cast = creditsResponse.data.cast
+        } catch (error) {
+          console.error(`获取电影 ${result.id} 的演员信息失败:`, error);
+        }
+        
         const movie = {
           id: result.id,
           title: result.title,
@@ -111,7 +125,8 @@ class TMDBApi {
           genres: genreNames.join(', '),
           originalTitle: result.original_title,
           runtime: null,
-          status: null
+          status: null,
+          cast: cast
         };
         
         movies.push(movie);
@@ -127,30 +142,46 @@ class TMDBApi {
   async getMovieById(id) {
     try {
       const axiosInstance = await this.createAxiosInstance();
-      const response = await axiosInstance.get(`/movie/${id}`, {
-        params: {
-          api_key: await this.getApiKey(),
-          language: 'zh-CN'
-        }
-      });
+      const [movieResponse, creditsResponse] = await Promise.all([
+        axiosInstance.get(`/movie/${id}`, {
+          params: {
+            api_key: await this.getApiKey(),
+            language: 'zh-CN'
+          }
+        }),
+        axiosInstance.get(`/movie/${id}/credits`, {
+          params: {
+            api_key: await this.getApiKey(),
+            language: 'zh-CN'
+          }
+        })
+      ]);
+
+      const cast = creditsResponse.data.cast.slice(0, 10).map(actor => ({
+        id: actor.id,
+        name: actor.name,
+        character: actor.character,
+        profile_path: actor.profile_path ? IMAGE_BASE_URL + actor.profile_path : null
+      }));
 
       return {
-        id: response.data.id,
-        title: response.data.title,
-        overview: response.data.overview,
-        posterPath: response.data.poster_path ? IMAGE_BASE_URL + response.data.poster_path : null,
-        releaseDate: response.data.release_date || '',
-        voteAverage: response.data.vote_average || 0,
-        genres: response.data.genres.map(genre => genre.name).join(', '),
-        originalLanguage: response.data.original_language,
-        originalTitle: response.data.original_title,
-        popularity: response.data.popularity,
-        video: response.data.video,
-        voteCount: response.data.vote_count,
-        adult: response.data.adult,
-        backdropPath: response.data.backdrop_path ? IMAGE_BASE_URL + response.data.backdrop_path : null,
-        runtime: response.data.runtime,
-        status: response.data.status
+        id: movieResponse.data.id,
+        title: movieResponse.data.title,
+        overview: movieResponse.data.overview,
+        posterPath: movieResponse.data.poster_path ? IMAGE_BASE_URL + movieResponse.data.poster_path : null,
+        releaseDate: movieResponse.data.release_date || '',
+        voteAverage: movieResponse.data.vote_average || 0,
+        genres: movieResponse.data.genres.map(genre => genre.name).join(', '),
+        originalLanguage: movieResponse.data.original_language,
+        originalTitle: movieResponse.data.original_title,
+        popularity: movieResponse.data.popularity,
+        video: movieResponse.data.video,
+        voteCount: movieResponse.data.vote_count,
+        adult: movieResponse.data.adult,
+        backdropPath: movieResponse.data.backdrop_path ? IMAGE_BASE_URL + movieResponse.data.backdrop_path : null,
+        runtime: movieResponse.data.runtime,
+        status: movieResponse.data.status,
+        cast: cast
       };
     } catch (error) {
       console.error('获取电影详情失败:', error);

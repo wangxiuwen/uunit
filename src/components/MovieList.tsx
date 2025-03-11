@@ -131,9 +131,19 @@ const MovieList = ({ movies, loading, onPageChange, totalPages = 1, currentPage 
                             </ListItemAvatar>
                             <ListItemText
                                 primary={
-                                    <Typography variant="h6" component="div">
-                                        {movie.title}
-                                    </Typography>
+                                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <Typography variant="h6" component="div">
+                                            {movie.title}
+                                        </Typography>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Typography variant="body2" color="text.secondary">
+                                                ★ {movie.voteAverage.toFixed(1)}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary">
+                                                ({movie.voteCount} 票)
+                                            </Typography>
+                                        </Box>
+                                    </Box>
                                 }
                                 secondary={
                                     <Box sx={{ mt: 1 }}>
@@ -143,7 +153,7 @@ const MovieList = ({ movies, loading, onPageChange, totalPages = 1, currentPage 
                                             </Typography>
                                         )}
                                         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-                                            {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '未知'} | {movie.genres || '未分类'}
+                                            {movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : '未知'} | {movie.genres || '未分类'} | 人气: {Math.round(movie.popularity)}
                                         </Typography>
                                         <Typography
                                             variant="body2"

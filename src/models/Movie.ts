@@ -1,3 +1,12 @@
+// 定义演员类型接口
+export interface Cast {
+  id: number;
+  name: string;
+  character: string;
+  profilePath: string | null;
+  order: number;
+}
+
 // 定义电影类型接口
 export interface Movie {
   id: number;
@@ -18,6 +27,7 @@ export interface Movie {
   video: boolean;
   adult: boolean;
   magnet?: string;
+  cast?: Cast[];
 }
 
 // 定义设置相关方法

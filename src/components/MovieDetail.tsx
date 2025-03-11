@@ -4,6 +4,11 @@ import { Box, Container, Typography, Grid, Paper, Skeleton, IconButton, Snackbar
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import { Movie } from '../types/global';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 const MovieDetail = () => {
     const { id } = useParams<{ id: string }>();
@@ -56,6 +61,7 @@ const MovieDetail = () => {
                 setLoading(true);
                 setError('');
                 const movieData = await window.electron.database.getMovie(Number(id));
+                console.log(movieData)
                 if (movieData) {
                     setMovie(movieData);
                 } else {
@@ -240,6 +246,90 @@ const MovieDetail = () => {
                     )}
                 </Grid>
             </Grid>
+
+            {/* {movie.backdropPath && (
+                <Box sx={{ mt: 4 }}>
+                    <Typography variant="h6" gutterBottom>剧照</Typography>
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        spaceBetween={20}
+                        slidesPerView={1}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ delay: 3000 }}
+                        style={{ borderRadius: '8px', overflow: 'hidden' }}
+                    >
+                        <SwiperSlide>
+                            <Box
+                                component="img"
+                                src={movie.backdropPath}
+                                alt={movie.title}
+                                sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                    maxHeight: '500px',
+                                    objectFit: 'cover'
+                                }}
+                            />
+                        </SwiperSlide>
+                    </Swiper>
+                </Box>
+            )} */}
+
+            {movie.cast && movie.cast.length > 0 && (
+                <Box sx={{ mt: 4 }}>
+                    <Typography variant="h6" gutterBottom>演员表</Typography>
+                    <Swiper
+                        modules={[Navigation, Pagination, Autoplay]}
+                        spaceBetween={20}
+                        slidesPerView={6}
+                        navigation
+                        pagination={{ clickable: true }}
+                        autoplay={{ delay: 3000 }}
+                        breakpoints={{
+                            320: { slidesPerView: 2 },
+                            480: { slidesPerView: 3 },
+                            768: { slidesPerView: 4 },
+                            1024: { slidesPerView: 6 }
+                        }}
+                    >
+                        {movie.cast.map((actor) => (
+                            <SwiperSlide key={actor.id}>
+                                <Paper
+                                    elevation={2}
+                                    sx={{
+                                        p: 2,
+                                        textAlign: 'center',
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center'
+                                    }}
+                                >
+                                    <Box
+                                        component="img"
+                                        src={actor.profilePath || (import.meta.env.DEV ? '/placeholder.png' : (appPath + "/dist/placeholder.png"))}
+                                        alt={actor.name}
+                                        sx={{
+                                            width: '100%',
+                                            height: 'auto',
+                                            aspectRatio: '2/3',
+                                            objectFit: 'cover',
+                                            borderRadius: 1,
+                                            mb: 1
+                                        }}
+                                    />
+                                    <Typography variant="subtitle2" noWrap>{actor.name}</Typography>
+                                    <Typography variant="caption" color="text.secondary" noWrap>
+                                        {actor.character}
+                                    </Typography>
+                                </Paper>
+                            </SwiperSlide>
+                        ))}
+                    </Swiper>
+                </Box>
+            )}
+
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}

@@ -38,7 +38,8 @@
     "react-router-dom": "^7.2.0",
     "sequelize": "^6.37.6",
     "socks-proxy-agent": "^8.0.5",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "swiper": "^11.2.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

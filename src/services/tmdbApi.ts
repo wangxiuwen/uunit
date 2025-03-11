@@ -1,4 +1,4 @@
-import { Movie, saveMovie } from '../models/Movie';
+import { Movie, Cast, saveMovie } from '../models/Movie';
 
 // 搜索电影
 export const searchMovies = async (query: string): Promise<Movie[]> => {
@@ -22,7 +22,8 @@ export const searchMovies = async (query: string): Promise<Movie[]> => {
         status: movie.status,
         popularity: movie.popularity,
         voteCount: movie.voteCount,
-        adult: movie.adult || false
+        adult: movie.adult || false,
+        cast: movie.cast || []
       }))
     );
     return savedMovies;

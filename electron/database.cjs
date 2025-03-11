@@ -158,6 +158,17 @@ const Resource = sequelize.define('Resource', {
     type: DataTypes.TEXT,
     allowNull: true
   },
+  cast: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    get() {
+      const rawValue = this.getDataValue('cast');
+      return rawValue ? JSON.parse(rawValue) : null;
+    },
+    set(value) {
+      this.setDataValue('cast', JSON.stringify(value));
+    }
+  },
 }, {
   tableName: 'Resource',
   timestamps: true
@@ -248,7 +259,22 @@ async function searchMovies(query, page = 1, pageSize = 12) {
         runtime: resource.runtime,
         status: resource.status,
         tmdbId: resource.tmdb_id,
+        thunderLink: resource.thunder_link,
+        baiduPan: resource.baidu_pan,
+        quarkPan: resource.quark_pan,
         ftpLink: resource.ftp_link,
+        thunderLink: resource.thunder_link,
+        baiduPan: resource.baidu_pan,
+        quarkPan: resource.quark_pan,
+        cast: resource.cast ? JSON.parse(resource.cast).map(actor => ({
+          id: actor.id,
+          name: actor.name,
+          profilePath: actor.profile_path ? IMAGE_BASE_URL + actor.profile_path : null,
+          creditId: actor.credit_id,
+          knownForDepartment: actor.known_for_department,
+          character: actor.character,
+          order: actor.order
+        })) : [],
         magnet: resource.magnet,
         createdAt: resource.createdAt,
         updatedAt: resource.updatedAt
@@ -286,8 +312,20 @@ async function getMovie(id) {
         runtime: resource.runtime,
         status: resource.status,
         tmdbId: resource.tmdb_id,
+        thunderLink: resource.thunder_link,
+        baiduPan: resource.baidu_pan,
+        quarkPan: resource.quark_pan,
         ftpLink: resource.ftp_link,
         magnet: resource.magnet,
+        cast: resource.cast ? JSON.parse(resource.cast).map(actor => ({
+          id: actor.id,
+          name: actor.name,
+          profilePath: actor.profile_path ? IMAGE_BASE_URL + actor.profile_path : null,
+          creditId: actor.credit_id,
+          knownForDepartment: actor.known_for_department,
+          character: actor.character,
+          order: actor.order
+        })) : [],
         createdAt: resource.createdAt,
         updatedAt: resource.updatedAt
     };
