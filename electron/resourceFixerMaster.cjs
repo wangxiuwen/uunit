@@ -26,13 +26,7 @@ async function initResourceFixer() {
               logger.info(`削刮Worker信息 ${data.message}`);
               break;
               case 'task_result':
-                logger.info(`task_result ${data.message}`);
-                // // 获取主窗口并发送消息给渲染进程
-                // const { BrowserWindow } = require('electron');
-                // const mainWindow = BrowserWindow.getAllWindows()[0];
-                // if (mainWindow) {
-                //   mainWindow.webContents.send('fixer:task_result', data);
-                // }
+                logger.info(`task_result ${JSON.stringify(data)}`);
                 break;
             default:
               logger.info(`未知消息类型: ${type}, ${JSON.stringify(data)}`);
