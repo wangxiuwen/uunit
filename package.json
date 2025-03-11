@@ -45,6 +45,8 @@
   "devDependencies": {
     "@eslint/js": "^9.21.0",
     "@playwright/test": "^1.51.0",
+    "@rollup/rollup-linux-x64-gnu": "^4.13.0",
+    "@rollup/rollup-win32-x64-msvc": "^4.13.0",
     "@types/electron": "^1.4.38",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",

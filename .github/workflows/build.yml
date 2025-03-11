@@ -54,14 +54,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Install Rollup dependencies (Ubuntu)
-        if: matrix.os == 'ubuntu-latest'
-        run: npm install @rollup/rollup-linux-x64-gnu
-
-      - name: Install Rollup dependencies (Windows)
-        if: matrix.os == 'windows-latest'
-        run: npm install @rollup/rollup-win32-x64-msvc
-
       - name: version
         run: npm run prebuild
 
