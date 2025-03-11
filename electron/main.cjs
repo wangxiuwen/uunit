@@ -6,6 +6,7 @@ const { AiService } = require('./aiservice.cjs');
 const { initCrawlers, startCrawlers } = require('./crawlerMaster.cjs');
 const { initResourceFixer, startResourceFixer } = require('./resourceFixerMaster.cjs');
 const {getFixerEnabled, getCrawlerEnabled, getCrawlSites} = require('./database.cjs');
+const Updater = require('./updater.cjs');
 
 let mainWindow = null;
 const aiService = new AiService();
@@ -25,46 +26,50 @@ async function createWindow() {
   });
   
   // 创建应用菜单
-  const template = [
-    {
-      label: 'uu',
-      submenu: [
-        {
-          label: '设置',
-          click: () => {
-            // 通知渲染进程打开设置
-            mainWindow.webContents.send('open-settings');
-          }
-        },
-        {
-            label: '编辑',
-            submenu: [
-                { label: '复制', accelerator: 'CmdOrCtrl+C', role: 'copy' },
-                { label: '粘贴', accelerator: 'CmdOrCtrl+V', role: 'paste' },
-                { label: '剪切', accelerator: 'CmdOrCtrl+X', role: 'cut' },
-                { label: '撤销', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
-                { label: '重做', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
-                { label: '全选', accelerator: 'CmdOrCtrl+A', role: 'selectAll' }
-            ]
-        },
-        { type: 'separator' },
-        {
-            label: '版本信息',
-            click: () => {
-              const { dialog } = require('electron');
-              const packageJson = require('../package.json');
-              dialog.showMessageBox(mainWindow, {
-                type: 'info',
-                title: '版本信息',
-                message: `uunit ${packageJson.version}`,
-                buttons: ['确定']
-              });
-            }
-          },
-        { role: 'quit', label: '退出' }
-      ]
-    }
-  ];
+  const template = [{
+    label: 'uu',
+    submenu: [
+      {
+        label: '设置',
+        click: () => {
+          mainWindow.webContents.send('open-settings');
+        }
+      },
+      {
+        label: '编辑',
+        submenu: [
+          { label: '复制', accelerator: 'CmdOrCtrl+C', role: 'copy' },
+          { label: '粘贴', accelerator: 'CmdOrCtrl+V', role: 'paste' },
+          { label: '剪切', accelerator: 'CmdOrCtrl+X', role: 'cut' },
+          { label: '撤销', accelerator: 'CmdOrCtrl+Z', role: 'undo' },
+          { label: '重做', accelerator: 'Shift+CmdOrCtrl+Z', role: 'redo' },
+          { label: '全选', accelerator: 'CmdOrCtrl+A', role: 'selectAll' }
+        ]
+      },
+      { type: 'separator' },
+      {
+        label: '版本信息',
+        click: () => {
+          const { dialog } = require('electron');
+          const packageJson = require('../package.json');
+          dialog.showMessageBox(mainWindow, {
+            type: 'info',
+            title: '版本信息',
+            message: `uunit ${packageJson.version}`,
+            buttons: ['确定']
+          });
+        }
+      },
+      {
+        label: '检查更新',
+        click: async () => {
+          const updater = new Updater(mainWindow);
+          await updater.checkForUpdates();
+        }
+      },
+      { role: 'quit', label: '退出' }
+    ]
+  }];
   
   const menu = Menu.buildFromTemplate(template);
   Menu.setApplicationMenu(menu);
@@ -98,6 +103,9 @@ async function createWindow() {
   mainWindow.on('closed', function () {
     mainWindow = null;
   });
+
+  // 初始化自动更新
+  const updater = new Updater(mainWindow);
 }
 
 // 当Electron完成初始化并准备创建浏览器窗口时调用此方法

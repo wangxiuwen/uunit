@@ -8,6 +8,12 @@ contextBridge.exposeInMainWorld('electron', {
     getAppPath: () => ipcRenderer.invoke('app:getAppPath'),
     getPath: (name) => ipcRenderer.invoke('app:getPath', name)
   },
+  // 自动更新相关接口
+  checkForUpdate: () => ipcRenderer.invoke('check-for-update'),
+  downloadUpdate: () => ipcRenderer.invoke('download-update'),
+  quitAndInstall: () => ipcRenderer.invoke('quit-and-install'),
+  onUpdateMessage: (callback) => ipcRenderer.on('update-message', callback),
+  removeUpdateMessage: (callback) => ipcRenderer.removeListener('update-message', callback),
   // 提供与主进程通信的方法
   database: {
     getSetting: (key) => ipcRenderer.invoke('db:getSetting', key),

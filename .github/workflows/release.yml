@@ -60,8 +60,8 @@ jobs:
       - name: Rebuild SQLite3 for Electron
         run: npm rebuild sqlite3 --runtime=electron --target=20.18.1 --dist-url=https://electronjs.org/headers
 
-      - name: Build Electron app
-        run: npm run electron:build
+      - name: release Electron app
+        run: npm run release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

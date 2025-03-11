@@ -1,7 +1,7 @@
 {
   "name": "uunit",
   "private": true,
-  "version": "v0.0.3-3-g0f73715",
+  "version": "v0.0.3-6-g6aacdbd",
   "description": "A cross-platform desktop application built with Electron and React",
   "author": {
     "name": "William Wong",
@@ -17,7 +17,8 @@
     "electron:dev": "cross-env NODE_ENV=development electron electron/main.cjs",
     "electron:build": "npm run build && electron-builder",
     "electron:start": "electron .",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "release": "npm run build && electron-builder --publish always"
   },
   "main": "electron/main.cjs",
   "dependencies": {
@@ -28,6 +29,7 @@
     "app-root-path": "^3.1.0",
     "axios": "^1.8.1",
     "cheerio": "^1.0.0",
+    "electron-updater": "^6.3.9",
     "https-proxy-agent": "^7.0.6",
     "log4js": "^6.9.1",
     "node-cron": "^3.0.3",
@@ -84,6 +86,13 @@
     ],
     "asarUnpack": [
       "icons/**/*"
+    ],
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "wangxiuwen",
+        "repo": "uunit"
+      }
     ],
     "mac": {
       "icon": "icons/uunit.icns",

@@ -17,6 +17,7 @@ import {
     MenuItem,
     FormControl,
     InputLabel,
+    Divider,
 } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -357,6 +358,7 @@ const Settings = ({ open, onClose }: SettingsProps) => {
                     >
                         添加网站
                     </Button>
+                    <Divider sx={{ my: 2 }} />
                 </Box>
             </DialogContent>
             <DialogActions>
