@@ -20,9 +20,10 @@ const MovieDetail = () => {
             setLoading(true);
             const { success } = await window.electron.fixer.task({ id: movie.id });
             if (success) {
+                setSnackbarMessage('电影信息更新中...');
+                await new Promise(resolve => setTimeout(resolve, 3000));
                 const updatedMovie = await window.electron.database.getMovie(movie.id);
                 setMovie(updatedMovie);
-                setSnackbarMessage('电影信息更新成功');
                 setSnackbarOpen(true);
             } else {
                 setSnackbarMessage('电影信息更新失败');

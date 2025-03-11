@@ -160,7 +160,6 @@ class ResourceFixerWorker extends WorkerFramework {
     }
     
     async updateFailedCount(resource, error) {
-
         logger.error(`处理失败: ${error.message}`);
         await Resource.update({
             failed_count: (resource.failed_count || 0) + 1,
