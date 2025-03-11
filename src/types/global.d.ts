@@ -26,6 +26,7 @@ interface Movie {
     adult: boolean;
     magnet?: string;
     ftpLink?: string;
+    thunderLink?: string;
     cast?: Cast[];
 }
 

@@ -37,10 +37,12 @@ const MovieDetail = () => {
         }
     };
 
-    const handleCopyMagnet = async () => {
-        if (movie?.magnet) {
+    const handleCopyLink = async () => {
+
+        const link = movie?.magnet || movie?.ftpLink || movie?.thunderLink
+        if (link) {
             try {
-                await navigator.clipboard.writeText(movie.magnet);
+                await navigator.clipboard.writeText(link);
                 setSnackbarMessage('链接已复制到剪贴板');
                 setSnackbarOpen(true);
             } catch (err) {
@@ -155,12 +157,12 @@ const MovieDetail = () => {
                                     }}
                                 />
                             </Paper>
-                            {movie.magnet && (
+                            {(movie.magnet || movie.ftpLink || movie.thunderLink) && (
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     startIcon={<ContentCopyIcon />}
-                                    onClick={handleCopyMagnet}
+                                    onClick={handleCopyLink}
                                     fullWidth
                                     sx={{
                                         py: 1.5,
