@@ -155,7 +155,7 @@ class ResourceFixerWorker extends WorkerFramework {
             where: { id: resource.id }
         });
     
-        logger.info();
+        logger.info(`资源更新成功：${resource.title} -> ${movieInfo.title} (TMDB ID: ${movieInfo.id})`);
         this.sendMessage('task_result', { success: true, message: `削刮成功: ${resource.title} -> ${movieInfo.title} (TMDB ID: ${movieInfo.id})`, resourceId: resource.id });
     }
     
