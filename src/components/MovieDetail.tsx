@@ -6,9 +6,6 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import { Movie } from '../types/global';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 
 const MovieDetail = () => {
     const { id } = useParams<{ id: string }>();

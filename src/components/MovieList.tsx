@@ -108,9 +108,9 @@ const MovieList = ({ movies, loading, onPageChange, totalPages = 1, currentPage 
                 <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                     {movies.map((movie) => (
                         <ListItem
+                            component="div"
                             key={movie.id}
                             alignItems="flex-start"
-                            button
                             onClick={async () => {
                                 try {
                                     await window.electron.fixer.task({ id: movie.id });
