@@ -8,7 +8,6 @@ async function initCrawlers(crawlerSites) {
 
     for (const crawlerSite of crawlerSites) {
         const siteUrl = crawlerSite.url;
-        console.log(`000000000`, siteUrl)
         if (!siteUrl) {
             logger.error(`无效的爬虫配置: ${JSON.stringify(crawlerSite)}`);
             continue;

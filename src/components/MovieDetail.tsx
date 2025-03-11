@@ -58,7 +58,6 @@ const MovieDetail = () => {
                 setLoading(true);
                 setError('');
                 const movieData = await window.electron.database.getMovie(Number(id));
-                console.log(movieData)
                 if (movieData) {
                     setMovie(movieData);
                 } else {

@@ -50,7 +50,6 @@ class ResourceFixerWorker extends WorkerFramework {
         if (id !== null && id !== '' && id != undefined) {
             query.where = {id: id};
         }
-        console.log(query)
 
         const resource = await Resource.findOne(query);
 
