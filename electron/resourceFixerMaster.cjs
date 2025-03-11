@@ -14,22 +14,22 @@ async function initResourceFixer() {
           const { type, data } = message;
           switch (type) {
             case 'started':
-              logger.info(`削刮Worker已启动`);
+              logger.info(`削刮Worker已启动 ${data ? JSON.stringify(data) : ''}`);
               break;
             case 'stopped':
-              logger.info(`削刮Worker已停止`);
+              logger.info(`削刮Worker已停止 ${data ? JSON.stringify(data) : ''}`);
               break;
             case 'error':
-              logger.error(`削刮Worker错误`, data);
+              logger.error(`削刮Worker错误 ${data ? JSON.stringify(data) : ''}`);
               break;
             case 'info':
-              logger.info(`削刮Worker信息 ${data.message}`);
+              logger.info(`削刮Worker信息 ${data ? JSON.stringify(data) : ''}`);
               break;
               case 'task_result':
-                logger.info(`task_result ${JSON.stringify(data)}`);
+                logger.info(`task_result ${data ? JSON.stringify(data) : ''}`);
                 break;
             default:
-              logger.info(`未知消息类型: ${type}, ${JSON.stringify(data)}`);
+              logger.info(`未知消息类型: ${type},  ${data ? JSON.stringify(data) : ''}`);
           }
         });
     

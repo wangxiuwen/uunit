@@ -52,20 +52,13 @@ class ResourceFixerWorker extends WorkerFramework {
         }
 
         const resource = await Resource.findOne(query);
-
         if (!resource) {
-            logger.info('没有找到需要处理的资源');
-            return
-        }
-
-        if (!resource || !resource.title) {
-            this.sendMessage('error', { success: false, error: error.message });
+            this.sendMessage('error', { success: false });
             return;
         }
 
-        if (!resource.title) {
-            await this.updateFailedCount(resource, error);
-            this.sendMessage('error', { success: false, error: error.message, resourceId: resource.id });
+        if (!resource._original_title) {
+            await this.updateFailedCount(resource, new Error(`未找到电影名称`));
             return;
         }
 
@@ -106,11 +99,11 @@ class ResourceFixerWorker extends WorkerFramework {
             输出: ["原始城市"]
             
             请处理以下电影标题：
-            ${resource.title}`
+            ${resource._original_title}`
         );
 
         cleanedTitles = JSON.parse(cleanedTitles);
-        logger.info(`标题清理完成: ${cleanedTitles}(${resource.title})`);
+        logger.info(`标题清理完成: ${cleanedTitles}-->(${resource._original_title})`);
         
         // 使用清理后的标题搜索TMDB电影信息
         let searchResults;
@@ -160,7 +153,7 @@ class ResourceFixerWorker extends WorkerFramework {
     }
     
     async updateFailedCount(resource, error) {
-        logger.error(`处理失败: ${error.message}`);
+        logger.error(`处理失败: ${error ? error.message : ''}`);
         await Resource.update({
             failed_count: (resource.failed_count || 0) + 1,
         }, {
