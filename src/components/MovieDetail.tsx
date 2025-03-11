@@ -181,7 +181,7 @@ const MovieDetail = () => {
                             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                 <Box sx={{ flex: 1 }}>
                                     <Typography variant="h4" component="h1" gutterBottom sx={{ fontWeight: 'bold' }}>
-                                        {movie.title}
+                                        {movie.title ? movie.title.slice(0, 20) : ''}
                                     </Typography>
                                     {movie.originalTitle && movie.originalTitle !== movie.title && (
                                         <Typography variant="h6" color="text.secondary" gutterBottom>
