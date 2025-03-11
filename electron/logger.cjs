@@ -64,12 +64,7 @@ class Logger {
         if (match) {
             const filePath = match[1];
             const fileName = path.basename(filePath, '.cjs');
-            // 从文件名中提取类别
-            if (fileName.toLowerCase().includes('crawler')) {
-                return 'crawler';
-            } else if (fileName.toLowerCase().includes('fixer')) {
-                return 'fixer';
-            }
+            return fileName;
         }
         return 'default';
     }
