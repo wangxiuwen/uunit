@@ -90,7 +90,16 @@
       "gatekeeperAssess": false
     },
     "win": {
-      "icon": "release/icons/icon.ico"
+        "identity": null,
+        "target": [
+            "nsis"
+        ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ]
     },
     "electronVersion": "34.3.0"
   },
