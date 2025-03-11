@@ -51,27 +51,14 @@ jobs:
       - name: Install node-gyp globally
         run: npm install -g node-gyp
 
-      - name: version
-        run: npm run prebuild
-
       - name: Install dependencies
         run: npm ci
+
+      - name: version
+        run: npm run prebuild
 
       - name: Rebuild SQLite3 for Electron
         run: npm rebuild sqlite3 --runtime=electron --target=20.18.1 --dist-url=https://electronjs.org/headers
 
       - name: Build Electron app
         run: npm run electron:build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-${{ matrix.os }}
-          path: |
-            release/*.dmg
-            release/*.exe
-            release/*.AppImage
-            release/*.snap
-          if-no-files-found: ignore

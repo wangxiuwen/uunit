@@ -31,13 +31,13 @@ jobs:
         if: matrix.os == 'ubuntu-latest'
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install Python 3.11 (Windows)
         if: matrix.os == 'windows-latest'
         uses: actions/setup-python@v4
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -59,8 +59,6 @@ jobs:
 
       - name: Build Electron app
         run: npm run electron:build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create source code archives
         run: |
