@@ -32,8 +32,6 @@
     "log4js": "^6.9.1",
     "node-cron": "^3.0.3",
     "openai": "^4.86.2",
-    "pg": "^8.13.3",
-    "pg-hstore": "^2.3.4",
     "playwright": "^1.51.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -43,7 +41,6 @@
     "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "rollup": "^4.13.0",
     "@eslint/js": "^9.21.0",
     "@playwright/test": "^1.51.0",
     "@types/electron": "^1.4.38",
@@ -58,6 +55,7 @@
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
+    "rollup": "^4.13.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0"
@@ -96,10 +94,10 @@
       "gatekeeperAssess": false
     },
     "win": {
-        "target": [
-            "nsis"
-        ],
-        "icon": "icons/icon.ico"
+      "target": [
+        "nsis"
+      ],
+      "icon": "icons/icon.ico"
     },
     "linux": {
       "target": [
