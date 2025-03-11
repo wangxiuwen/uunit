@@ -4,7 +4,8 @@
   "version": "v0.0.2-1-gc6fc579",
   "description": "A cross-platform desktop application built with Electron and React",
   "author": {
-    "name": "William Wong"
+    "name": "William Wong",
+    "email": "wangxiuwen@wangxiuwen.com"
   },
   "type": "module",
   "scripts": {
@@ -65,7 +66,7 @@
       "output": "release",
       "buildResources": "build"
     },
-    "appId": "com.wangxiuwen.app",
+    "appId": "com.wangxiuwen.uunit",
     "productName": "uunit",
     "files": [
       {
@@ -92,12 +93,16 @@
     "win": {
         "target": [
             "nsis"
-        ]
+        ],
+        "icon": "icons/icon.ico"
     },
     "linux": {
       "target": [
-        "AppImage"
-      ]
+        "AppImage",
+        "deb"
+      ],
+      "maintainer": "William Wong <williamwong@example.com>",
+      "category": "Utility"
     },
     "electronVersion": "34.3.0"
   },
