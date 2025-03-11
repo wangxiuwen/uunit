@@ -130,7 +130,9 @@ class CrawlerWorker extends WorkerFramework {
                 let resourceTitle = `${title || ''} ${magnet.name}`.trim();
                 await Resource.create({
                 title: resourceTitle,
-                magnet: magnet.link
+                magnet: magnet.link,
+                _original_title: resourceTitle,
+                _original_link: url,
                 });
                 this.sendMessage('info', { 
                 message: `资源已保存: ${resourceTitle}`,
@@ -151,7 +153,9 @@ class CrawlerWorker extends WorkerFramework {
             let resourceTitle = `${title || ''} ${ftpLink.name}`.trim();
             await Resource.create({
             title: resourceTitle,
-            ftp_link: ftpLink.link
+            ftp_link: ftpLink.link,
+            _original_title: resourceTitle,
+            _original_link: url,
             });
             this.sendMessage('info', { 
             message: `FTP资源已保存: ${resourceTitle}`,
@@ -165,7 +169,9 @@ class CrawlerWorker extends WorkerFramework {
             let resourceTitle = `${title || ''} ${thunderLink.name}`.trim();
             await Resource.create({
             title: resourceTitle,
-            thunder_link: thunderLink.link
+            thunder_link: thunderLink.link,
+            _original_title: resourceTitle,
+            _original_link: url,
             });
             this.sendMessage('info', { 
             message: `thunder 资源已保存: ${resourceTitle}`,

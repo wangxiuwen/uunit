@@ -146,6 +146,14 @@ const Resource = sequelize.define('Resource', {
     type: DataTypes.TEXT,
     allowNull: true
   },
+  _original_title: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
+  _original_link: {
+    type: DataTypes.TEXT,
+    allowNull: true
+  },
   thunder_link: {
     type: DataTypes.TEXT,
     allowNull: true
